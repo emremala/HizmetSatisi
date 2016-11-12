@@ -1,0 +1,29 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+<div class="panel panel-default">
+    <div class="panel-heading">Giriş Yapın</div>
+    <div class="panel-body">
+        @if (Convert.ToBoolean(Session["loginFailed"]) == true)
+        {
+            Session["loginFailed"] = false;
+            <div class="alert alert-danger" role="alert">
+                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                <span class="sr-only">Hata:</span>
+                Giriş yapılamadı!
+            </div>
+        }
+        <form class="form-horizontal" method="post" action="/Account/Control">
+            <div class="form-group">
+                <label for="username" class="col-sm-4 control-label">Kullanıcı Adı :</label>
+                <input class="form-control col-xs-12" name="txtUsername" placeholder="Kullanıcı adı" value="@Request.Form["username"]" />
+            </div>
+            <div class="form-group">
+                <label for="username" class="col-sm-4 control-label">Parola :</label>
+                <input class="form-control" name="txtPassword" type="password" placeholder="Parola" />
+            </div>
+            <button class="btn btn-success col-sm-offset-4">Giriş Yap</button>
+        </form>
+        @*@Html.Partial("Counter")*@
+    </div>
+</div>
