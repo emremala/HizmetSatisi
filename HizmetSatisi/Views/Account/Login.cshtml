@@ -4,9 +4,9 @@
 <div class="panel panel-default">
     <div class="panel-heading">Giriş Yapın</div>
     <div class="panel-body">
-        @if (Convert.ToBoolean(Session["loginFailed"]) == true)
+        @if (Convert.ToBoolean(Session["loginError"]) == true)
         {
-            Session["loginFailed"] = false;
+            Session["loginError"] = false;
             <div class="alert alert-danger" role="alert">
                 <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
                 <span class="sr-only">Hata:</span>

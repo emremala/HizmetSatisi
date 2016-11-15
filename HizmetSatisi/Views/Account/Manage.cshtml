@@ -1,0 +1,104 @@
+﻿
+@{
+    ViewBag.Title = "Manage";
+}
+
+<div class="row">
+    <div class="col-lg-6 col-lg-offset-3" style="margin: 0 0 50px 0;">
+        <div class="row">
+            <div class="col-xs-6 col-md-3">
+                <a href="#" class="thumbnail">
+                    <img src="@Url.Content(Session["avatarimg"].ToString())" alt="avatar" />
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <table class="table table-bordered">
+        <thead class="thead-inverse">
+            <tr>
+                <th>#</th>
+                <th>Kullanıcı Adınız</th>
+                <th>Parola</th>
+                <th>Adınız</th>
+                <th>E-mail</th>
+                @*<th>Profil Resminiz</th>*@
+                <th>Kart Numaranız</th>
+                <th>CVC</th>
+                <th>STK (Gün)</th>
+                <th>STK (Ay)</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <form class="form-horizontal" method="post" action="/Account/SelectUserInfo">
+                    @foreach (var user in ViewBag.UserList)
+                    {
+                        <th style="text-align: center; line-height: 50px;" scope="row">1</th>
+                        <td style="text-align: center; line-height: 50px;">@user.USRNM</td>
+                        <td style="text-align: center; line-height: 50px;">1</td>
+                        <td style="text-align: center; line-height: 50px;">@user.FULNM</td>
+                        <td style="text-align: center; line-height: 50px;">@user.EMAIL</td>
+                        <td style="text-align: center; line-height: 50px;">@user.CARDNO</td>
+                        <td style="text-align: center; line-height: 50px;">@user.CVC</td>
+                        <td style="text-align: center; line-height: 50px;">@user.STKDAY</td>
+                        <td style="text-align: center; line-height: 50px;">@user.STKMONTH</td>
+                        <td style="text-align: center; line-height: 50px;"><button id="@user.ID" class="btn btn-success col-sm-offset-4" style="margin: 0;" name="@user.ID" value="@user.ID"><i class="fa fa-credit-card"></i>Bilgilerini Güncelle</button></td>
+
+                    }
+                </form>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">Bilgilerinizi Güncelleyin</div>
+        <div class="panel-body">
+            @foreach (var user in ViewBag.UserList)
+            {
+                <form enctype="multipart/form-data" class="form-horizontal" method="post" action="/Account/SelectUserInfoChange">
+                    <div class="form-group">
+                        <label for="username" class="col-sm-4 control-label">Kullanıcı Adı :</label>
+                        <input class="form-control col-xs-12" name="txtUSRNM" placeholder="Kullanıcı adı" value="@user.USRNM" />
+                    </div>
+                    <div class="form-group">
+                        <label for="username" class="col-sm-4 control-label">Parola :</label>
+                        <input class="form-control" name="txtPWD" type="password" placeholder="Parola" value="@user.PWD" />
+                    </div>
+                    <div class="form-group">
+                        <label for="fulname" class="col-sm-4 control-label">Adınız :</label>
+                        <input class="form-control col-xs-12" name="txtFULNM" placeholder="Ad-Soyad" value="@user.FULNM" />
+                    </div>
+                    <div class="form-group">
+                        <label for="EMAIL" class="col-sm-4 control-label">E-mail :</label>
+                        <input class="form-control col-xs-12" name="txtEMAIL" placeholder="E-mail" value="@user.EMAIL" />
+                    </div>
+                    <div class="form-group">
+                        <label for="CARDNO" class="col-sm-4 control-label">Kart No :</label>
+                        <input class="form-control" name="txtCARDNO" placeholder="Kart No" value="@user.CARDNO" />
+                    </div>
+                    <div class="form-group">
+                        <label for="CVC" class="col-sm-4 control-label">CVC :</label>
+                        <input class="form-control" name="txtCVC" placeholder="CVC" value="@user.CVC" />
+                    </div>
+                    <div class="form-group">
+                        <label for="STKDAY" class="col-sm-4 control-label">Son Kullanma Tarihi :</label>
+                        <input class="form-control" name="txtSTKDAY" placeholder="Gün" value="@user.STKDAY" />
+                    </div>
+                    <div class="form-group">
+                        <label for="STKMONTH" class="col-sm-4 control-label">Son Kullanma Tarihi :</label>
+                        <input class="form-control" name="txtSTKMONTH" placeholder="Ay" value="@user.STKMONTH" />
+                    </div>
+                    <div class="form-group">
+                        <label for="username" class="col-sm-4 control-label">Profil :</label>
+                        <input type="file" id="file" name="file" />
+                    </div>
+                    <button id="@user.ID" class="btn btn-success col-sm-offset-4" name="@user.ID" value="@user.ID">Güncelle</button>
+                </form>
+            }
+        </div>
+    </div>
+
+</div>
+

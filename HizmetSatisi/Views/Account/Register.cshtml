@@ -26,7 +26,7 @@
         <form enctype="multipart/form-data" class="form-horizontal" method="post" action="/Account/UserAdd">
             <div class="form-group">
                 <label for="fulname" class="col-sm-4 control-label">Adınız :</label>
-                <input class="form-control col-xs-12" name="txtFULNM" placeholder="Ad-Soyad" />
+                <input class="form-control col-xs-12" name="txtFULNM" required="" placeholder="Ad-Soyad" />
             </div>
             <div class="form-group">
                 <label for="username" class="col-sm-4 control-label">Kullanıcı Adı :</label>
@@ -39,22 +39,6 @@
             <div class="form-group">
                 <label for="username" class="col-sm-4 control-label">Parola :</label>
                 <input class="form-control" name="txtPWD" type="password" placeholder="Parola" />
-            </div>
-            <div class="form-group">
-                <label for="CARDNO" class="col-sm-4 control-label">Kart No :</label>
-                <input class="form-control" name="txtCARDNO" placeholder="Kart No" />
-            </div>
-            <div class="form-group">
-                <label for="CVC" class="col-sm-4 control-label">CVC :</label>
-                <input class="form-control" name="txtCVC" placeholder="CVC" />
-            </div>
-            <div class="form-group">
-                <label for="STKDAY" class="col-sm-4 control-label">Son Kullanma Tarihi :</label>
-                <input class="form-control" name="txtSTKDAY" placeholder="Gün" />
-            </div>
-            <div class="form-group">
-                <label for="STKMONTH" class="col-sm-4 control-label">Son Kullanma Tarihi :</label>
-                <input class="form-control" name="txtSTKMONTH" placeholder="Ay" />
             </div>
             <div class="form-group">
                 <label for="username" class="col-sm-4 control-label">Profil :</label>

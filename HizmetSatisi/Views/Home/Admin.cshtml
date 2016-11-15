@@ -1,0 +1,146 @@
+﻿@{
+    ViewBag.Title = "Admin Paneli";
+}
+
+@if (Convert.ToBoolean(Session["ADMIN"]))
+{
+    <div class="row">
+    <div class="col-lg-6 col-lg-offset-3">
+        <div class="row">
+            <div class="col-xs-6 col-md-3">
+                <a href="#" class="thumbnail">
+                    <img src="@Url.Content(Session["avatarimg"].ToString())" alt="avatar" />
+                </a>
+            </div>
+        </div>
+        <br />
+        <br />
+       
+        <div id="exTab1" class="container">
+            <ul class="nav nav-pills">
+                <li class="active">
+                    <a href="#1a" data-toggle="tab">Kayıt İşlemleri</a>
+                </li>
+                <li>
+                    <a href="#2a" data-toggle="tab">Silme İşlemleri</a>
+                </li>
+                <li>
+                    <a href="#3a" data-toggle="tab">Güncelleme İşlemleri</a>
+                </li>
+                <li>
+                    <a href="#4a" data-toggle="tab">Raporlar</a>
+                </li>
+            </ul>
+
+            <div class="tab-content clearfix">
+                <div class="tab-pane active" id="1a">
+                    <br />
+                    <div class="row margin">
+                        <div class="col-sm-4">
+                            <a class="btn btn-block btn-default" href="@Url.Action("Film", "Film")">
+                                <i class="fa fa-list fa-3x"></i><br> <small>Film Kayıt</small>
+                            </a>
+                        </div>
+                        <div class="col-sm-4">
+                            <a class="btn btn-block btn-default" href="@Url.Action("Hall", "Film")">
+                                <i class="fa fa-th fa-3x"></i><br> <small>Salon Kayıt</small>
+                            </a>
+                        </div>
+                        <div class="col-sm-4">
+                            <a class="btn btn-block btn-default" href="@Url.Action("Category", "Film")">
+                                <i class="fa fa-align-justify fa-3x"></i><br> <small>Kategori Kayıt</small>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane" id="2a">
+                    <br />
+                    <div class="row margin">
+                        <div class="col-sm-4">
+                            <a class="btn btn-block btn-default" href="@Url.Action("FilmDelete", "Film")">
+                                <i class="fa fa-list fa-3x"></i><br> <small>Film Sil</small>
+                            </a>
+                        </div>
+                        <div class="col-sm-4">
+                            <a class="btn btn-block btn-default" href="@Url.Action("HallDelete", "Film")">
+                                <i class="fa fa-th fa-3x"></i><br> <small>Salon Sil</small>
+                            </a>
+                        </div>
+                        <div class="col-sm-4">
+                            <a class="btn btn-block btn-default" href="@Url.Action("CategoryDelete", "Film")">
+                                <i class="fa fa-align-justify fa-3x"></i><br> <small>Kategori Sil</small>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane" id="3a">
+                    <br />
+                    <div class="row margin">
+                        <div class="col-sm-4">
+                            <a class="btn btn-block btn-default" href="@Url.Action("FilmUpdate", "Film")">
+                                <i class="fa fa-list fa-3x"></i><br> <small>Film Güncelle</small>
+                            </a>
+                        </div>
+                        <div class="col-sm-4">
+                            <a class="btn btn-block btn-default" href="@Url.Action("HallUpdate", "Film")">
+                                <i class="fa fa-th fa-3x"></i><br> <small>Salon Güncelle</small>
+                            </a>
+                        </div>
+                        <div class="col-sm-4">
+                            <a class="btn btn-block btn-default" href="@Url.Action("CategoryUpdate", "Film")">
+                                <i class="fa fa-align-justify fa-3x"></i><br> <small>Kategori Güncelle</small>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane" id="4a">
+                    <br />
+                    <div class="row margin">
+                        <div class="col-sm-4">
+                            <a class="btn btn-block btn-default" href="@Url.Action("Index","Categories")">
+                                <i class="fa fa-credit-card fa-3x"></i><br> <small>İşlemler</small>
+                            </a>
+                        </div>
+                        <div class="col-sm-4">
+                            <a class="btn btn-block btn-default" href="@Url.Action("Index","Users")">
+                                <i class="fa fa-user fa-3x"></i><br> <small>Kullanıcılar</small>
+                            </a>
+                        </div>
+                        <div class="col-sm-4">
+                            <a class="btn btn-block btn-default" href="@Url.Action("Index","UserTypes")">
+                                <i class="fa fa-group fa-3x"></i><br> <small>Rapor</small>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @*<div class="row margin">
+            <div class="col-sm-4">
+                <a class="btn btn-block btn-default" href="@Url.Action("Index","Comments")">
+                    <i class="fa fa-commenting fa-3x"></i><br> <small>Yorumlar</small>
+                </a>
+            </div>
+            <div class="col-sm-4">
+                <a class="btn btn-block btn-default" href="@Url.Action("Index","Logs")">
+                    <i class="fa fa-area-chart fa-3x"></i><br> <small>İşlem Kayıtları</small>
+                </a>
+            </div>
+            <div class="col-sm-4">
+                <a class="btn btn-block btn-default" href="@Url.Action("Index", "ProjectAccesses")">
+                    <i class="fa fa-exchange fa-3x"></i><br> <small>Proje Erişimleri</small>
+                </a>
+            </div>
+        </div>*@
+    </div>
+</div>
+}
+else { 
+            <div class="alert alert-danger" role="alert">
+                <span class="glyphicon glyphicon-remove"></span>
+                <span class="sr-only">Error:</span>
+                Yetkiniz Yok.
+            </div>
+}
+
