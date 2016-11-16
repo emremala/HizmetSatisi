@@ -41,6 +41,10 @@
                 <input class="form-control" name="txtPWD" type="password" placeholder="Parola" />
             </div>
             <div class="form-group">
+                <label for="username" class="col-sm-4 control-label">Kullanıcı Tipi :</label>
+                @Html.DropDownList("USRTYP", null, "Tipi", new { @class = "form-control" })
+            </div>
+            <div class="form-group">
                 <label for="username" class="col-sm-4 control-label">Profil :</label>
                 <input type="file" id="file" name="file" />
             </div>

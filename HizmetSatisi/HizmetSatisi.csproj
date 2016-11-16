@@ -288,6 +288,7 @@
     <Content Include="Views\Default\Admin.cshtml" />
     <Content Include="Views\Account\Manage.cshtml" />
     <Content Include="Views\Home\Admin.cshtml" />
+    <Content Include="Views\Home\Cust.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="images\profil\" />
