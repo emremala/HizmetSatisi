@@ -211,6 +211,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\DefaultController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\PostBackController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -224,6 +225,7 @@
     <Content Include="App_Data\OfficeAgent.Cryption.dll" />
     <Content Include="App_Data\OfficeAgent.Data.dll" />
     <Content Include="App_Data\OfficeAgent.Object.dll" />
+    <Content Include="css\2016style.css" />
     <Content Include="css\bootstrap.css" />
     <Content Include="css\bootstrap.min.css" />
     <Content Include="css\font-awesome.css" />
@@ -234,6 +236,13 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="css\site.css" />
+    <Content Include="images\profil\nullavatar.jpg" />
+    <Content Include="images\tender\20161119_195218.jpg" />
+    <Content Include="images\tender\avatar1.JPG" />
+    <Content Include="images\tender\nullavatar.jpg" />
+    <Content Include="images\tender\snapchat-redesign.jpg" />
+    <Content Include="images\tender\sQR7xTw.jpg" />
+    <Content Include="images\ui-icons.png" />
     <Content Include="js\ai.0.22.9-build00167.js" />
     <Content Include="js\ai.0.22.9-build00167.min.js" />
     <Content Include="js\bootstrap.js" />
@@ -250,15 +259,18 @@
     <Content Include="js\jquery-1.10.2.js" />
     <Content Include="js\jquery-1.10.2.min.js" />
     <None Include="js\jquery.validate-vsdoc.js" />
+    <Content Include="js\jquery-1.12.4.js" />
     <Content Include="js\jquery-ui.js" />
     <Content Include="js\jquery.min.js" />
     <Content Include="js\jquery.validate.js" />
     <Content Include="js\jquery.validate.min.js" />
     <Content Include="js\jquery.validate.unobtrusive.js" />
     <Content Include="js\jquery.validate.unobtrusive.min.js" />
+    <Content Include="js\maskedinput.js" />
     <Content Include="js\modernizr-2.6.2.js" />
     <Content Include="js\respond.js" />
     <Content Include="js\respond.min.js" />
+    <Content Include="js\validator.min.js" />
     <Content Include="js\_references.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -289,10 +301,12 @@
     <Content Include="Views\Account\Manage.cshtml" />
     <Content Include="Views\Home\Admin.cshtml" />
     <Content Include="Views\Home\Cust.cshtml" />
+    <Content Include="Views\Home\Seller.cshtml" />
+    <Content Include="Views\Home\TenderGift.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="images\profil\" />
     <Folder Include="Models\" />
+    <Folder Include="Views\PostBack\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

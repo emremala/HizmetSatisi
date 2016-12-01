@@ -7,7 +7,31 @@
 
         <ul class="nav navbar-nav navbar-right">
             <li>
-                @Html.ActionLink("Hoşgeldin " + Session["name"] + "", "Manage", "Account", routeValues: null, htmlAttributes: new { title = "Manage" })
+
+               
+                <div class="dropdown">
+                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        @Html.ActionLink("Hoşgeldin " + Session["name"], "");
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                        <li>@Html.ActionLink("Bilgileri Güncelle", "Manage", "Account")</li>
+                        @if (Convert.ToBoolean(Session["IS_HR"]))
+                        {
+                            <li>@Html.ActionLink("Y", "Home", "Seller")</li>
+                        }
+                        else if (Convert.ToBoolean(Session["IS_ADMIN"]))
+                        {
+                            <li>@Html.ActionLink("Yönetim Paneli", "Cust", "Home")</li>
+                        }
+                        else
+                        {
+                            <li>@Html.ActionLink("Yönetim Paneli", "Admin", "Home")</li>
+                        }
+                    </ul>
+                </div>
+
+                
             </li>
             <li><a href="javascript:document.getElementById('logoutForm').submit()">Çıkış</a></li>
         </ul>

@@ -6,6 +6,7 @@ using OfficeAgent.Data;
 using OfficeAgent.Object;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.IO;
 using System.Linq;
@@ -37,16 +38,27 @@ namespace HizmetSatisi.Controllers
             public string USRNM { get; set; }
             public string PWD { get; set; }
             public string FULNM { get; set; }
+
+            [DataType(DataType.EmailAddress, ErrorMessage = "Invalid Email Address")]
             public string EMAIL { get; set; }
             public string CARDNO { get; set; }
-            public string CVC { get; set; }
+            public string AVATAR { get; set; }
             public string STATUS { get; set; }
             public string STKDAY { get; set; }
             public string STKMONTH { get; set; }
         }
+        public class TenderList
+        {
+            public Guid ID { get; set; }
+            public string TENDERNAME { get; set; }
+            public string TENDERNOTE { get; set; }
+            public string TENDERIMAGE { get; set; }
+            public Guid TENDERUSRID { get; set; }
+
+        }
 
         // GET: Account
-        
+
 
         public ActionResult Login()
         {
@@ -56,6 +68,11 @@ namespace HizmetSatisi.Controllers
 
         public ActionResult Register()
         {
+            DataSet dsUserType = new DataSet();
+            using (DataVw dMan = new DataVw())
+            {
+                dsUserType = dMan.ExecuteView_S("USR", "*", "", "", "ID = ");
+            }
             List<SelectListItem> usrtyp = new List<SelectListItem>();
 
             usrtyp.Add(new SelectListItem { Text = "Müşteri", Value = "0" });
@@ -89,11 +106,7 @@ namespace HizmetSatisi.Controllers
                     PWD = CryptionHelper.Decrypt(dr["PWD"].ToString(), "tb"),
                     EMAIL = dr["EMAIL"].ToString(),
                     FULNM = dr["FULNM"].ToString(),
-                    CARDNO = dr["CARDNO"].ToString(),
-                    STATUS = Status,
-                    CVC = dr["CVC"].ToString(),
-                    STKDAY = dr["STKDAY"].ToString(),
-                    STKMONTH = dr["STKMONTH"].ToString()
+                    
                 });
             }
 
@@ -105,10 +118,13 @@ namespace HizmetSatisi.Controllers
         public ActionResult SelectUserInfo(System.Web.Mvc.FormCollection collection)
         {
             string USRID = collection.AllKeys[0].ToString();
-
-            return Redirect("/Account/SelectUserInfoChange");
+            return Redirect("/Account/SelectUserInfoChange");   
         }
-
+        public ActionResult SelectTenderInfo(System.Web.Mvc.FormCollection collection)
+        {
+            //string USRID = collection.AllKeys[0].ToString();
+            return Redirect("/Account/SelectTender");
+        }
         [HttpPost]
         public ActionResult SelectUserInfoChange(string txtUSRNM, string txtFULNM, string txtPWD, string txtEMAIL, string txtCARDNO, string txtCVC, string txtSTKDAY, string txtSTKMONTH, HttpPostedFileBase file, System.Web.Mvc.FormCollection collection)
         {
@@ -180,9 +196,66 @@ namespace HizmetSatisi.Controllers
             }
             return Redirect("/Account/Manage");
         }
+        public ActionResult SelectTender(string txtTENDERNAME, string txtTENDERNOTE, HttpPostedFileBase file, System.Web.Mvc.FormCollection collection)
+        {
+            using (DataVw dMan = new DataVw())
+            {
+                dsUser = dMan.ExecuteView_S("TENDER", "*", "", "", "");
+            }
+            //string USRID = collection.AllKeys[3].ToString();
+            string filefo = "";
+            if (txtTENDERNAME.ToString() == "" || txtTENDERNOTE.ToString() == "" )
+            {
+                return Content("<script language='javascript' type='text/javascript'>alert('Eksik veri girişi! Tüm Alanları Doldurunuz.');</script>");  ////Alert Mesajı Göndermek için.
+                //ViewBag.addmessage = "Eksik veri girişi! Tüm Alanları Doldurunuz.";
+                //return Redirect("/Account/Manage");
+            }
+            else
+            {
+                if (file != null)
+                {
+                    string pic = System.IO.Path.GetFileName(file.FileName);
+                    string path = System.IO.Path.Combine(Server.MapPath("~/images/tender"), pic);
+                    string pathd = "~/images/tender/" + pic;
+                    // file is uploaded
+                    file.SaveAs(path);
+                    filefo = pathd;
+
+                    using (MemoryStream ms = new MemoryStream())
+                    {
+                        file.InputStream.CopyTo(ms);
+                        byte[] array = ms.GetBuffer();
+                    }
+
+                }
+
+
+                //DataRow newrow = dsUser.Tables[0].Rows[0];
+                //newrow["ID"] = Guid.NewGuid();
+                //newrow["TENDERNAME"] = txtTENDERNAME;
+                //newrow["TENDERNOTE"] = txtTENDERNOTE;
+                //newrow["TENDERIMAGE"] = filefo;
+                //newrow["TANDERUSRID"] = Session["USRIDv"].ToString();
+                DataTable table = new DataTable();
+                table.Columns.Add("ID", typeof(Guid));
+                table.Columns.Add("TENDERNAME", typeof(string));
+                table.Columns.Add("TENDERNOTE", typeof(string));
+                table.Columns.Add("TENDERIMAGE", typeof(string));
+                table.Columns.Add("TANDERUSRID", typeof(Guid));
+                table.Rows.Add(Guid.NewGuid(), txtTENDERNAME, txtTENDERNOTE, filefo, Session["USRIDv"].ToString());
+
+                AgentGc data = new AgentGc();
+                string veri = data.DataAdded("TENDER", table.Rows[0], dsUser.Tables[0]);
+                //return Content("<script language='javascript' type='text/javascript'>alert('" + veri + "');</script>");
+                //ViewBag.addmessageinfo = veri;
+                return Redirect("/Home/Seller");
+            }
+            return Redirect("/Home/Seller");
+        }
         [HttpPost]
         public ActionResult Control(string txtUsername, string txtPassword)
         {
+            HomeController HomeCont = new HomeController();
             UserManager uMan = new UserManager(txtUsername, txtPassword);
             _li = uMan.CheckLogin();
 
@@ -227,7 +300,8 @@ namespace HizmetSatisi.Controllers
                         {
                             Session["avatarimg"] = row["AVATAR"].ToString();
                         }
-
+                        
+                        
                         return Redirect("/Home/Admin");
                     }
                     else if(row["IS_ADMIN"].ToString() == "True")
@@ -243,13 +317,15 @@ namespace HizmetSatisi.Controllers
                         {
                             Session["avatarimg"] = row["AVATAR"].ToString();
                         }
+                       
                         return Redirect("/Home/Cust");
                     }
                     else
 	                {
+                        Session["SELLER"] = true;
                         Session["IsAuthenticated"] = true;
                         Session["loginRoles"] = false;
-                        Session["admin"] = false;
+                        //Session["admin"] = false;
                         if (row["AVATAR"].ToString() == "")
                         {
                             Session["avatarimg"] = "~/images/profil/nullavatar.jpg";
@@ -258,9 +334,11 @@ namespace HizmetSatisi.Controllers
                         {
                             Session["avatarimg"] = row["AVATAR"].ToString();
                         }
+
                         
                     }
-                    return Redirect("/Home/Index");
+                   
+                    return Redirect("/Home/Seller");
                 }
 
                 Session["loginError"] = true;

@@ -1,0 +1,190 @@
+﻿
+
+
+@{
+    ViewBag.Title = "Seller";
+}
+
+@{
+    ViewBag.Title = "Satıcı Paneli";
+}
+@if (Convert.ToBoolean(Session["SELLER"]))
+{
+
+    <div class="row">
+        <div class="col-lg-6 col-lg-offset-3" style="margin-left:0px;width:100%;">
+            <div class="row">
+                <div class="col-xs-6 col-md-3">
+                    <a href="#" class="thumbnail">
+                        <img style="width: 50%;" src="@Url.Content(Session["avatarimg"].ToString())" alt="avatar" />
+                    </a>
+                </div>
+            </div>
+            <br />
+            <br />
+
+            <div id="exTab1" class="container">
+                <ul class="nav nav-pills">
+                    <li class="active">
+                        <a href="#1a" data-toggle="tab">Bilgileriniz</a>
+                    </li>
+                    <li>
+                        <a href="#2a" data-toggle="tab">Verdiğiniz Teklifler</a>
+                    </li>
+                    <li>
+                        <a href="#3a" data-toggle="tab">Onaylananlar</a>
+                    </li>
+                    <li>
+                        <a href="#4a" data-toggle="tab">Raporlar</a>
+                    </li>
+                </ul>
+
+                <div class="tab-content clearfix">
+                    <div class="tab-pane" id="1a">
+                        <br />
+                        <table class="table table-bordered">
+                            <thead class="thead-inverse">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Kullanıcı Adınız</th>
+                                    <th>Parola</th>
+                                    <th>Adınız</th>
+                                    <th>Email</th>
+                                    <th>Üyelik Durumunuz</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var user in ViewBag.SellerInfo)
+                                {
+                                    <tr>
+                                        <form class="form-horizontal" method="post" action="/Account/SelectUserInfo">
+
+                                            <th style="text-align: center; line-height: 50px;" scope="row">1</th>
+                                            <td style="text-align: center; line-height: 50px;">@user.USRNM</td>
+                                            <td style="text-align: center; line-height: 50px;">1</td>
+                                            <td style="text-align: center; line-height: 50px;">@user.FULNM</td>
+                                            <td style="text-align: center; line-height: 50px;">@user.EMAIL</td>
+                                            <td style="text-align: center; line-height: 50px;">@user.STATUS</td>
+
+
+                                        </form>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="tab-pane" id="2a">
+                        <br />
+                        <table class="table table-bordered">
+                            <thead class="thead-inverse">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Teklif Adı</th>
+                                    <th>Teklif Açıklama</th>
+                                    <th>Resim</th>
+                                    
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @try
+                                {
+                                foreach (var tender in ViewBag.Tender)
+                                {
+                                    <tr>
+                                        
+
+                                            <th style="text-align: center; line-height: 50px;" scope="row">1</th>
+                                            <td style="text-align: center; line-height: 50px;">@tender.TENDERNAME</td>
+                                            <td style="text-align: center; line-height: 50px;">@tender.TENDERNOTE</td>
+                                            <td style="text-align: center; line-height: 50px;"><img style="width:100px;height:100px;" src="@Url.Content(@tender.TENDERIMAGE)" alt="avatar" /></td>
+                                           
+
+
+                                        
+                                    </tr>
+                                }
+                                }
+                                catch (Exception)
+                                {
+
+                                    throw;
+                                }
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="tab-pane" id="3a">
+                        <br />
+                        <table class="table table-bordered">
+                            <thead class="thead-inverse">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Kullanıcı Adınız</th>
+                                    <th>Parola</th>
+                                    <th>Adınız</th>
+                                    <th>Email</th>
+                                    <th>Üyelik Durumunuz</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var user in ViewBag.SellerInfo)
+                                {
+                                    <tr>
+                                        <form class="form-horizontal" method="post" action="/Account/SelectUserInfo">
+
+                                            <th style="text-align: center; line-height: 50px;" scope="row">1</th>
+                                            <td style="text-align: center; line-height: 50px;">@user.USRNM</td>
+                                            <td style="text-align: center; line-height: 50px;">1</td>
+                                            <td style="text-align: center; line-height: 50px;">@user.FULNM</td>
+                                            <td style="text-align: center; line-height: 50px;">@user.EMAIL</td>
+                                            <td style="text-align: center; line-height: 50px;">@user.STATUS</td>
+
+
+                                        </form>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="tab-pane" id="4a">
+                        <br />
+                        <div class="panel panel-default">
+                            <div class="panel-heading">Teklif Ver </div>
+                            <div class="panel-body">
+                                    <form enctype="multipart/form-data" class="form-horizontal" method="post" action="/Account/SelectTender">
+                                        <div class="form-group">
+                                            <label for="username" class="col-sm-4 control-label">Teklif Adı :</label>
+                                            <input class="form-control col-xs-12"required="" name="txtTENDERNAME" placeholder="Teklif Adı"  />
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="username" class="col-sm-4 control-label">Açıklama :</label>
+                                            <input class="form-control"required="" name="txtTENDERNOTE" placeholder="Açıklama"  />
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="username" class="col-sm-4 control-label">Teklif Resmi :</label>
+                                            <input type="file" id="file" required="" name="file" />
+                                        </div>
+                                        <button  class="btn btn-success col-sm-offset-4">Teklifi Kaydet</button>
+                                    </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="alert alert-danger" role="alert">
+        <span class="glyphicon glyphicon-remove"></span>
+        <span class="sr-only">Error:</span>
+        Yetkiniz Yok.
+    </div>
+}
+
+
+
+
