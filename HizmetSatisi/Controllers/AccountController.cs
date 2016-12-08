@@ -56,6 +56,22 @@ namespace HizmetSatisi.Controllers
             public Guid TENDERUSRID { get; set; }
 
         }
+        public class TenderDList
+        {
+            public Guid ID { get; set; }
+            public Guid TENDERUSERID { get; set; }
+            public string TENDERNAME { get; set; }
+            public string FULNM { get; set; }
+            public string COUNTRYNM { get; set; }
+            public string TOWNNM { get; set; }
+            public string TANDERDATE { get; set; }
+            public string TEL { get; set; }
+            public string EMAIL { get; set; }
+            public string NOTE { get; set; }
+            public string STATUS { get; set; }
+
+
+        }
 
         // GET: Account
 
@@ -64,8 +80,8 @@ namespace HizmetSatisi.Controllers
         {
             return View();
         }
-        
 
+        #region Müşteri - Satıcı Kontrol İşlemi
         public ActionResult Register()
         {
             DataSet dsUserType = new DataSet();
@@ -82,7 +98,8 @@ namespace HizmetSatisi.Controllers
 
             return View();
         }
-
+        #endregion
+        #region Manage Sayfası Bilgilerini Görüntüleme
         public ActionResult Manage()
         {
             DataSet dsUser = new DataSet();
@@ -114,16 +131,12 @@ namespace HizmetSatisi.Controllers
 
             return View();
         }
-
+        #endregion
+        #region Kullanıcı Bilgi Güncelleme
         public ActionResult SelectUserInfo(System.Web.Mvc.FormCollection collection)
         {
             string USRID = collection.AllKeys[0].ToString();
-            return Redirect("/Account/SelectUserInfoChange");   
-        }
-        public ActionResult SelectTenderInfo(System.Web.Mvc.FormCollection collection)
-        {
-            //string USRID = collection.AllKeys[0].ToString();
-            return Redirect("/Account/SelectTender");
+            return Redirect("/Account/SelectUserInfoChange");
         }
         [HttpPost]
         public ActionResult SelectUserInfoChange(string txtUSRNM, string txtFULNM, string txtPWD, string txtEMAIL, string txtCARDNO, string txtCVC, string txtSTKDAY, string txtSTKMONTH, HttpPostedFileBase file, System.Web.Mvc.FormCollection collection)
@@ -196,6 +209,13 @@ namespace HizmetSatisi.Controllers
             }
             return Redirect("/Account/Manage");
         }
+        #endregion
+        #region Veri Çekme Tender
+        public ActionResult SelectTenderInfo(System.Web.Mvc.FormCollection collection)
+        {
+            //string USRID = collection.AllKeys[0].ToString();
+            return Redirect("/Account/SelectTender");
+        }
         public ActionResult SelectTender(string txtTENDERNAME, string txtTENDERNOTE, HttpPostedFileBase file, System.Web.Mvc.FormCollection collection)
         {
             using (DataVw dMan = new DataVw())
@@ -252,6 +272,8 @@ namespace HizmetSatisi.Controllers
             }
             return Redirect("/Home/Seller");
         }
+        #endregion
+        #region Kullanıcı LogIn Kontrolü
         [HttpPost]
         public ActionResult Control(string txtUsername, string txtPassword)
         {
@@ -281,6 +303,8 @@ namespace HizmetSatisi.Controllers
 
                 if (txtUsername.ToString() == row["USRNM"].ToString() && txtPassword.ToString() == CryptionHelper.Decrypt(row["PWD"].ToString(), "tb").ToString())
                 {
+                    Session["USRSTATUS"] = row["IS_ADMIN"].ToString();
+                    Session["USRSTATUSADM"] = row["IS_SYSADM"].ToString();
                     Session["USRIDv"] = row["ID"].ToString();
                     Session["name"] = row["FULNM"].ToString();
                     //Session["admin"] = true;
@@ -290,6 +314,7 @@ namespace HizmetSatisi.Controllers
 
                     if (row["IS_SYSADM"].ToString() == "True")
                     {
+                        Session["IS_SYSADM"] = true;
                         //Session["loginRoles"] = true;
                         //Session["admin"] = true;
                         if (row["AVATAR"].ToString() == "")
@@ -309,6 +334,7 @@ namespace HizmetSatisi.Controllers
                         Session["IsAuthenticated"] = true;
                         Session["loginRoles"] = false;
                         Session["CUST"] = true;
+                        Session["IS_ADMIN"] = true;
                         if (row["AVATAR"].ToString() == "")
                         {
                             Session["avatarimg"] = "~/images/profil/nullavatar.jpg";
@@ -326,6 +352,7 @@ namespace HizmetSatisi.Controllers
                         Session["IsAuthenticated"] = true;
                         Session["loginRoles"] = false;
                         //Session["admin"] = false;
+                        Session["IS_HR"] = true;
                         if (row["AVATAR"].ToString() == "")
                         {
                             Session["avatarimg"] = "~/images/profil/nullavatar.jpg";
@@ -358,7 +385,8 @@ namespace HizmetSatisi.Controllers
                 return Redirect("/Account/Login");
             }
         }
-
+        #endregion
+        #region Yeni Kullanıcı Ekleme Register
         [HttpPost]
         public ActionResult UserAdd(string txtUSRNM, string txtFULNM, string txtPWD, string txtEMAIL, HttpPostedFileBase file, FormCollection collection)
         {
@@ -443,18 +471,8 @@ namespace HizmetSatisi.Controllers
             return Redirect("/Account/Register");
 
         }
-
-        //private IAuthenticationManager AuthenticationManager
-        //{
-        //    get
-        //    {
-        //        return HttpContext.GetOwinContext().Authentication;
-        //    }
-        //}
-        
-
-        //
-        // POST: /Account/LogOff
+        #endregion
+        #region Çıkış LogOn İşlemi
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult LogOff()
@@ -463,6 +481,59 @@ namespace HizmetSatisi.Controllers
             //AuthenticationManager.SignOut();
             return RedirectToAction("Index", "Home");
         }
-
+        #endregion
+        public ActionResult Confirmation(string BtnKbl, string BtnRed, System.Web.Mvc.FormCollection collection)
+        {
+            DataSet dsTenderD = new DataSet();
+            string kbl = collection["BtnKbl"];
+            string red = collection["BtnRed"];
+            if (kbl != null)
+            {
+                using (DataVw dMan = new DataVw())
+                {
+                    dsTenderD = dMan.ExecuteView_S("TENDERD", "*", kbl, "", "ID = ");
+                }
+                DataRow newrow = dsTenderD.Tables[0].Rows[0];
+                newrow["ID"] = (Guid)dsTenderD.Tables[0].Rows[0]["ID"];
+                newrow["TENDERID"] = dsTenderD.Tables[0].Rows[0]["TENDERID"];
+                newrow["TENDERUSERID"] = dsTenderD.Tables[0].Rows[0]["TENDERUSERID"];
+                newrow["TENDERDUSRID"] = dsTenderD.Tables[0].Rows[0]["TENDERDUSRID"];
+                newrow["COUNTRYID"] = dsTenderD.Tables[0].Rows[0]["COUNTRYID"];
+                newrow["TOWNID"] = dsTenderD.Tables[0].Rows[0]["TOWNID"];
+                newrow["TANDERDATE"] = dsTenderD.Tables[0].Rows[0]["TANDERDATE"];
+                newrow["TEL"] = dsTenderD.Tables[0].Rows[0]["TEL"];
+                newrow["EMAİL"] = dsTenderD.Tables[0].Rows[0]["EMAİL"];
+                newrow["NOTE"] = dsTenderD.Tables[0].Rows[0]["NOTE"];
+                newrow["STATUS"] = "True";
+                newrow["PAYSTATUS"] = dsTenderD.Tables[0].Rows[0]["PAYSTATUS"];
+                AgentGc data = new AgentGc();
+                string veri = data.DataModified("TENDERD", newrow, dsTenderD.Tables[0]);
+                return Redirect("/Home/Seller");
+            }
+            if (red != null)
+            {
+                using (DataVw dMan = new DataVw())
+                {
+                    dsTenderD = dMan.ExecuteView_S("TENDERD", "*", red, "", "ID = ");
+                }
+                DataRow newrow = dsTenderD.Tables[0].Rows[0];
+                newrow["ID"] = dsTenderD.Tables[0].Rows[0]["ID"];
+                newrow["TENDERID"] = dsTenderD.Tables[0].Rows[0]["TENDERID"];
+                newrow["TENDERUSERID"] = dsTenderD.Tables[0].Rows[0]["TENDERUSERID"];
+                newrow["TENDERDUSRID"] = dsTenderD.Tables[0].Rows[0]["TENDERDUSRID"];
+                newrow["COUNTRYID"] = dsTenderD.Tables[0].Rows[0]["COUNTRYID"];
+                newrow["TOWNID"] = dsTenderD.Tables[0].Rows[0]["TOWNID"];
+                newrow["TANDERDATE"] = dsTenderD.Tables[0].Rows[0]["TANDERDATE"];
+                newrow["TEL"] = dsTenderD.Tables[0].Rows[0]["TEL"];
+                newrow["EMAİL"] = dsTenderD.Tables[0].Rows[0]["EMAİL"];
+                newrow["NOTE"] = dsTenderD.Tables[0].Rows[0]["NOTE"];
+                newrow["STATUS"] = "False";
+                newrow["PAYSTATUS"] = dsTenderD.Tables[0].Rows[0]["PAYSTATUS"];
+                AgentGc data = new AgentGc();
+                string veri = data.DataModified("TENDERD", newrow, dsTenderD.Tables[0]);
+                return Redirect("/Home/Seller");
+            }
+            return View();
+        }
     }
 }

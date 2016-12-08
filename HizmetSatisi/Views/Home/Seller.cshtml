@@ -35,7 +35,10 @@
                         <a href="#3a" data-toggle="tab">Onaylananlar</a>
                     </li>
                     <li>
-                        <a href="#4a" data-toggle="tab">Raporlar</a>
+                        <a href="#4a" data-toggle="tab">Teklif Ver</a>
+                    </li>
+                    <li>
+                        <a href="#5a" data-toggle="tab">Bildirimler</a>
                     </li>
                 </ul>
 
@@ -128,22 +131,24 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var user in ViewBag.SellerInfo)
-                                {
-                                    <tr>
-                                        <form class="form-horizontal" method="post" action="/Account/SelectUserInfo">
+                               @foreach (var tenderAppd in ViewBag.TenderAppD)
+                               {
+                                <tr>
 
-                                            <th style="text-align: center; line-height: 50px;" scope="row">1</th>
-                                            <td style="text-align: center; line-height: 50px;">@user.USRNM</td>
-                                            <td style="text-align: center; line-height: 50px;">1</td>
-                                            <td style="text-align: center; line-height: 50px;">@user.FULNM</td>
-                                            <td style="text-align: center; line-height: 50px;">@user.EMAIL</td>
-                                            <td style="text-align: center; line-height: 50px;">@user.STATUS</td>
-
-
-                                        </form>
-                                    </tr>
-                                }
+                                   
+                                        <th style="text-align: center; line-height: 50px;" scope="row">1</th>
+                                        <td style="text-align: center; line-height: 50px;">@tenderAppd.TENDERNAME</td>
+                                        <td style="text-align: center; line-height: 50px;">@tenderAppd.FULNM</td>
+                                        <td style="text-align: center; line-height: 50px;">@tenderAppd.COUNTRYNM</td>
+                                        <td style="text-align: center; line-height: 50px;">@tenderAppd.TOWNNM</td>
+                                        <td style="text-align: center; line-height: 50px;">@tenderAppd.TANDERDATE</td>
+                                        <td style="text-align: center; line-height: 50px;">@tenderAppd.TEL</td>
+                                        <td style="text-align: center; line-height: 50px;">@tenderAppd.EMAIL</td>
+                                        <td style="text-align: center; line-height: 50px;">@tenderAppd.NOTE</td>
+                                        <td style="text-align: center; line-height: 50px;">@tenderAppd.STATUS </td>
+                                    
+                                </tr>
+                               }
                             </tbody>
                         </table>
                     </div>
@@ -170,6 +175,50 @@
                                     </form>
                             </div>
                         </div>
+                    </div>
+                    <div class="tab-pane" id="5a">
+                        <br />
+                        <table class="table table-bordered">
+                            <thead class="thead-inverse">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Teklif Adı</th>
+                                    <th>Müşteri Adı</th>
+                                    <th>İl</th>
+                                    <th>İlçe</th>
+                                    <th>Veriliş Tarihi</th>
+                                    <th>Telefon</th>
+                                    <th>E-mail</th>
+                                    <th>Açıklama</th>
+                                   
+                                  
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var tenderd in  ViewBag.TenderD)
+                                {
+                                    <tr>
+                                       
+                                        <form class="form-horizontal" method="post" action="/Account/Confirmation ">
+                                            <th style="text-align: center; line-height: 50px;" scope="row">1</th>
+                                            <td style="text-align: center; line-height: 50px;">@tenderd.TENDERNAME</td>
+                                            <td style="text-align: center; line-height: 50px;">@tenderd.FULNM</td>
+                                            <td style="text-align: center; line-height: 50px;">@tenderd.COUNTRYNM</td>
+                                            <td style="text-align: center; line-height: 50px;">@tenderd.TOWNNM</td>
+                                            <td style="text-align: center; line-height: 50px;">@tenderd.TANDERDATE</td>
+                                            <td style="text-align: center; line-height: 50px;">@tenderd.TEL</td>
+                                            <td style="text-align: center; line-height: 50px;">@tenderd.EMAIL</td>
+                                            <td style="text-align: center; line-height: 50px;">@tenderd.NOTE</td>
+                                            <td style="text-align: center; line-height: 50px;">
+                                                <button id="@tenderd.ID" value="@tenderd.ID" name="BtnRed" class="btn btn-success col-sm-offset-4">Reddet</button>
+                                                <button id="@tenderd.ID" value="@tenderd.ID" name="BtnKbl"  class="btn btn-success col-sm-offset-4">Kabulet</button >
+                                            </td>
+                                        </form>
+
+</tr>
+                                }
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>

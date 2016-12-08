@@ -59,17 +59,24 @@ namespace HizmetSatisi.Controllers
         public ActionResult TenderSave(string txtTANDERDATE, string txtTEL, string txtEMAİL, string txtNOTE, System.Web.Mvc.FormCollection collection)
         {
             DataSet dsTenderD = new DataSet();
+            DataSet dsTenderUser = new DataSet();
             string COUNID = collection["USERCNTR"];
             string TOWNID = collection["USERTOWN"];
-
+            string TenderUserId = Session["TENDERID"].ToString();
             using (DataVw dMan = new DataVw())
             {
                 dsTenderD = dMan.ExecuteView_S("TENDERD", "*", "", "", "");
             }
+            using (DataVw dMan = new DataVw())
+            {
+                dsTenderUser = dMan.ExecuteView_S("TENDER", "TENDERUSRID", TenderUserId,"", "ID=");
 
+            }
+            TenderUserId = dsTenderUser.Tables[0].Rows[0][0].ToString();
             DataRow newrow = dsTenderD.Tables[0].NewRow();
             newrow["ID"] = Guid.NewGuid();
             newrow["TENDERID"] = Session["TENDERID"].ToString();
+            newrow["TENDERUSERID"] = TenderUserId;
             newrow["TENDERDUSRID"] = Session["USRIDv"].ToString();
             newrow["COUNTRYID"] = COUNID;
             newrow["TOWNID"] = TOWNID;
@@ -77,103 +84,86 @@ namespace HizmetSatisi.Controllers
             newrow["TEL"] = txtTEL;
             newrow["EMAİL"] = txtEMAİL;
             newrow["NOTE"] = txtNOTE;
+            newrow["STATUS"] = "False";
+            newrow["PAYSTATUS"] = "False";
             AgentGc data = new AgentGc();
             string veri = data.DataAdded("TENDERD", newrow, dsTenderD.Tables[0]);
 
             return Redirect("/Home/Index");
         }
-        
-        //public ActionResult GETTT(int ulkeId)
-        //{
-
-        //    DataSet dsUserCountry = new DataSet();
-        //    using (DataVw dMan = new DataVw())
-        //    {
-        //        dsUserCountry = dMan.ExecuteView_S("TOWN", "TOWNNM,TOWNID", "", "", "COUNTRYID="+ ulkeId + "");
-        //    }
-        //    List<SelectListItem> dsUserCNTR = new List<SelectListItem>();
-        //    foreach (DataRow dr in dsUserCountry.Tables[0].Rows)
-        //    {
-        //        dsUserCNTR.Add(new SelectListItem { Text = dr["TOWNNM"].ToString(), Value = dr["TOWNID"].ToString() });
-        //    }
-        //    ViewBag.dsUserCNTR = dsUserCNTR;
-        //    return Json(dsUserCNTR);
-        //}
 
 
-        //public ActionResult GETT(string il_id)
-        //{
-        //    DataSet dsUserCountry = new DataSet();
-        //    using (DataVw dMan = new DataVw())
-        //    {
-        //        dsUserCountry = dMan.ExecuteView_S("TOWN", "TOWNNM,TOWNID", "", "", "COUNTRYID=" + il_id + "");
-        //    }
-        //    List<SelectListItem> dsUserCNTR = new List<SelectListItem>();
-        //    foreach (DataRow dr in dsUserCountry.Tables[0].Rows)
-        //    {
-        //        dsUserCNTR.Add(new SelectListItem { Text = dr["TOWNNM"].ToString(), Value = dr["TOWNID"].ToString() });
-        //    }
 
-        //    return Json(new SelectList(dsUserCNTR, "Value", "Text"));
-        //}
-
-
+       
 
         public ActionResult TenderGift(System.Web.Mvc.FormCollection collection)
         {
-            DataSet dsUserCountry = new DataSet();
-            using (DataVw dMan = new DataVw())
-            {
-                dsUserCountry = dMan.ExecuteView_S("COUNTRY", "COUNTRYID,COUNTRYNM", "", "", "");
-            }
-            List<SelectListItem> dsUserCNTR = new List<SelectListItem>();
-            foreach (DataRow dr in dsUserCountry.Tables[0].Rows)
-            {
-                dsUserCNTR.Add(new SelectListItem { Text = dr["COUNTRYNM"].ToString(), Value = dr["COUNTRYID"].ToString() });
-            }
-            ViewBag.USERCNTR = dsUserCNTR;
 
-            if (Convert.ToBoolean(Session["IsAuthenticated"]))
+            if (Session["USRSTATUS"] != null)
             {
-                string USRID = collection["btnTENDERID"];
-                Session["TENDERID"] = USRID;
-                DataSet dsUser = new DataSet();
-
-                using (DataVw dMan = new DataVw())
+                if (Session["USRSTATUS"].ToString() == "True" && Session["USRSTATUS"].ToString() != null)
                 {
-                    dsUser = dMan.ExecuteView_S("USR", "*", Session["USRIDv"].ToString(), "", "ID =");
-                }
-
-                List<UserList> UserTenderInfo = new List<UserList>();
-                foreach (DataRow dr in dsUser.Tables[0].Rows)
-                {
-                    string Status = "";
-                    if (dr[7].ToString() == "True") { Status = "Admin Hesabı"; }
-                    if (dr[6].ToString() == "True") { Status = "Müşteri Hesabı"; }
-                    if (dr[8].ToString() == "True") { Status = "Satıcı Hesabı"; }
-                    UserTenderInfo.Add(new UserList
+                    if (Convert.ToBoolean(Session["IsAuthenticated"]))
                     {
-                        AVATAR = dr["AVATAR"].ToString(),
-                        ID = (Guid)dr["ID"],
-                        USRNM = dr["USRNM"].ToString(),
-                        STATUS = Status,
-                        EMAIL = dr["EMAIL"].ToString(),
-                        FULNM = dr["FULNM"].ToString(),
+                        DataSet dsUserCountry = new DataSet();
+                        using (DataVw dMan = new DataVw())
+                        {
+                            dsUserCountry = dMan.ExecuteView_S("COUNTRY", "COUNTRYID,COUNTRYNM", "", "", "");
+                        }
+                        List<SelectListItem> dsUserCNTR = new List<SelectListItem>();
+                        foreach (DataRow dr in dsUserCountry.Tables[0].Rows)
+                        {
+                            dsUserCNTR.Add(new SelectListItem { Text = dr["COUNTRYNM"].ToString(), Value = dr["COUNTRYID"].ToString() });
+                        }
+                        ViewBag.USERCNTR = dsUserCNTR;
+                        string USRID = collection["btnTENDERID"];
+                        Session["TENDERID"] = USRID;
+                        DataSet dsUser = new DataSet();
 
-                    });
+                        using (DataVw dMan = new DataVw())
+                        {
+                            dsUser = dMan.ExecuteView_S("USR", "*", Session["USRIDv"].ToString(), "", "ID =");
+                        }
+
+                        List<UserList> UserTenderInfo = new List<UserList>();
+                        foreach (DataRow dr in dsUser.Tables[0].Rows)
+                        {
+                            string Status = "";
+                            if (dr[7].ToString() == "True") { Status = "Admin Hesabı"; }
+                            if (dr[6].ToString() == "True") { Status = "Müşteri Hesabı"; }
+                            if (dr[8].ToString() == "True") { Status = "Satıcı Hesabı"; }
+                            UserTenderInfo.Add(new UserList
+                            {
+                                AVATAR = dr["AVATAR"].ToString(),
+                                ID = (Guid)dr["ID"],
+                                USRNM = dr["USRNM"].ToString(),
+                                STATUS = Status,
+                                EMAIL = dr["EMAIL"].ToString(),
+                                FULNM = dr["FULNM"].ToString(),
+
+                            });
+                        }
+
+
+                        ViewBag.UserTenderInfo = UserTenderInfo;
+                        return View();
+                    }
+                    else
+                    {
+
+                        return Redirect("/Account/Login");
+                    }
                 }
+                else
+                {
+                    return Redirect("/Home/Index");
 
-
-                ViewBag.UserTenderInfo = UserTenderInfo;
-                return View();
+                } 
             }
             else
             {
-
-                return Redirect("/Account/Login");
+                return Redirect("/Home/Index");
             }
-           
-
         }
 
         public ActionResult About()
@@ -233,6 +223,64 @@ namespace HizmetSatisi.Controllers
 
         public ActionResult Seller()
         {
+            DataSet dsTenderDs = new DataSet();
+            using (DataVw dMan = new DataVw())
+            {
+                dsTenderDs = dMan.ExecuteView_S("TENDERISHR", "*", Session["USRIDv"].ToString(), "", "TENDERUSERID=");
+            }
+            List<TenderDList> dsTenderD = new List<TenderDList>();
+            foreach (DataRow dr in dsTenderDs.Tables[0].Rows)
+            {
+                dsTenderD.Add(new TenderDList
+                {
+                    ID = (Guid)dr["ID"],
+                    TENDERUSERID = (Guid)dr["TENDERUSERID"],
+                    TENDERNAME = dr["TENDERNAME"].ToString(),
+                    FULNM = dr["FULNM"].ToString(),
+                    COUNTRYNM = dr["COUNTRYNM"].ToString(),
+                    TOWNNM = dr["TOWNNM"].ToString(),
+                    TANDERDATE = dr["TANDERDATE"].ToString(),
+                    TEL = dr["TEL"].ToString(),
+                    EMAIL = dr["EMAİL"].ToString(),
+                    NOTE = dr["NOTE"].ToString(),
+
+
+                });
+            }
+
+
+
+            ViewBag.TenderD = dsTenderD;
+            DataSet dsTenderApds = new DataSet();
+            using (DataVw dMan = new DataVw())
+            {
+                dsTenderApds = dMan.ExecuteView_S("TENDERISHRAPP", "*", Session["USRIDv"].ToString(), "", "TENDERUSERID=");
+            }
+            List<TenderDList> dsTenderAppD = new List<TenderDList>();
+            foreach (DataRow dr in dsTenderApds.Tables[0].Rows)
+            {
+                string PAYSTATUS;
+                if (dr["PAYSTATUS"].ToString() == "True") {PAYSTATUS = "Ödendi"; } else { PAYSTATUS = "Ödeme Bekleniyor.."; }
+
+                dsTenderAppD.Add(new TenderDList
+                {
+                    ID = (Guid)dr["ID"],
+                    TENDERUSERID = (Guid)dr["TENDERUSERID"],
+                    TENDERNAME = dr["TENDERNAME"].ToString(),
+                    FULNM = dr["FULNM"].ToString(),
+                    COUNTRYNM = dr["COUNTRYNM"].ToString(),
+                    TOWNNM = dr["TOWNNM"].ToString(),
+                    TANDERDATE = dr["TANDERDATE"].ToString(),
+                    TEL = dr["TEL"].ToString(),
+                    EMAIL = dr["EMAİL"].ToString(),
+                    NOTE = dr["NOTE"].ToString(),
+                    STATUS = PAYSTATUS,
+                });
+            }
+
+
+
+            ViewBag.TenderAppD = dsTenderAppD;
             DataSet dsUser = new DataSet();
 
             using (DataVw dMan = new DataVw())
