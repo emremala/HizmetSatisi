@@ -202,13 +202,107 @@ namespace HizmetSatisi.Controllers
 
 
             ViewBag.CustInfo = CustInfo;
+            DataSet dsTenderDs = new DataSet();
+            using (DataVw dMan = new DataVw())
+            {
+                dsTenderDs = dMan.ExecuteView_S("TENDERADMIN", "*", Session["USRIDv"].ToString(), "", "TENDERDUSRID =");
+            }
 
-       
+            List<TenderDList> dsTenderD = new List<TenderDList>();
+            foreach (DataRow dr in dsTenderDs.Tables[0].Rows)
+            {
+                string STATUS;
+                if (dr["STATUS"].ToString() == "True") { STATUS = "Ödeme Sayfasına Gidiniz.."; } else { STATUS = "Onay Bekleniyor.."; }
+                dsTenderD.Add(new TenderDList
+                {
+                    ID = (Guid)dr["ID"],
+                    TENDERUSERID = (Guid)dr["TENDERUSERID"],
+                    TENDERNAME = dr["TENDERNAME"].ToString(),
+                    FULNM = dr["FULNM"].ToString(),
+                    COUNTRYNM = dr["COUNTRYNM"].ToString(),
+                    TOWNNM = dr["TOWNNM"].ToString(),
+                    TANDERDATE = dr["TANDERDATE"].ToString(),
+                    TEL = dr["TEL"].ToString(),
+                    EMAIL = dr["EMAİL"].ToString(),
+                    NOTE = dr["NOTE"].ToString(),
+                    STATUS = STATUS,
+
+                });
+            }
+
+
+
+            ViewBag.TenderAD = dsTenderD;
+            DataSet dsTenderDsApp = new DataSet();
+            using (DataVw dMan = new DataVw())
+            {
+                dsTenderDsApp = dMan.ExecuteView_S("TENDERADMINAPP", "*", Session["USRIDv"].ToString(), "", "TENDERDUSRID =");
+            }
+            List<TenderDList> dsTenderDAp = new List<TenderDList>();
+            foreach (DataRow dr in dsTenderDsApp.Tables[0].Rows)
+            {
+                dsTenderDAp.Add(new TenderDList
+                {
+                    ID = (Guid)dr["ID"],
+                    TENDERUSERID = (Guid)dr["TENDERUSERID"],
+                    TENDERNAME = dr["TENDERNAME"].ToString(),
+                    FULNM = dr["FULNM"].ToString(),
+                    COUNTRYNM = dr["COUNTRYNM"].ToString(),
+                    TOWNNM = dr["TOWNNM"].ToString(),
+                    TANDERDATE = dr["TANDERDATE"].ToString(),
+                    TEL = dr["TEL"].ToString(),
+                    EMAIL = dr["EMAİL"].ToString(),
+                    NOTE = dr["NOTE"].ToString(),
+                });
+            }
+
+
+
+            ViewBag.TenderADApp = dsTenderDAp;
+            DataSet dsTenderDsConf = new DataSet();
+            using (DataVw dMan = new DataVw())
+            {
+                dsTenderDsConf = dMan.ExecuteView_S("TENDERADMINCONF", "*", Session["USRIDv"].ToString(), "", "TENDERDUSRID =");
+            }
+            List<TenderDList> dsTenderConf = new List<TenderDList>();
+            foreach (DataRow dr in dsTenderDsConf.Tables[0].Rows)
+            {
+                dsTenderConf.Add(new TenderDList
+                {
+                    ID = (Guid)dr["ID"],
+                    TENDERUSERID = (Guid)dr["TENDERUSERID"],
+                    TENDERNAME = dr["TENDERNAME"].ToString(),
+                    FULNM = dr["FULNM"].ToString(),
+                    COUNTRYNM = dr["COUNTRYNM"].ToString(),
+                    TOWNNM = dr["TOWNNM"].ToString(),
+                    TANDERDATE = dr["TANDERDATE"].ToString(),
+                    TEL = dr["TEL"].ToString(),
+                    EMAIL = dr["EMAİL"].ToString(),
+                    NOTE = dr["NOTE"].ToString(),
+                });
+            }
+
+
+
+            ViewBag.TenderADConf = dsTenderConf;
             return View();
         }
-        
 
 
+        public ActionResult Payment(string txtFULNM,string txtMM,string txtYY,string txtKN,string txtCVC)
+         {
+            if (txtFULNM==null&&txtMM== null && txtYY== null && txtKN== null && txtCVC== null)
+            {
+                return View();
+            }
+            else
+            {
+                return Redirect("/Home/Cust");
+                
+            }
+
+            
+        }
         public ActionResult Contact()
         {
             ViewBag.Message = "Your contact page.";

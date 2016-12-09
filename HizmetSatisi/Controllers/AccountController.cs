@@ -482,6 +482,31 @@ namespace HizmetSatisi.Controllers
             return RedirectToAction("Index", "Home");
         }
         #endregion
+        public ActionResult ConfirmationADMIN(string BtnOde, System.Web.Mvc.FormCollection collection)
+        {
+            DataSet dsTenderAD = new DataSet();
+            using (DataVw dMan = new DataVw())
+            {
+                dsTenderAD = dMan.ExecuteView_S("TENDERD", "*", BtnOde, "", "ID = ");
+            }
+            DataRow newrow = dsTenderAD.Tables[0].Rows[0];
+            newrow["ID"] = (Guid)dsTenderAD.Tables[0].Rows[0]["ID"];
+            newrow["TENDERID"] = dsTenderAD.Tables[0].Rows[0]["TENDERID"];
+            newrow["TENDERUSERID"] = dsTenderAD.Tables[0].Rows[0]["TENDERUSERID"];
+            newrow["TENDERDUSRID"] = dsTenderAD.Tables[0].Rows[0]["TENDERDUSRID"];
+            newrow["COUNTRYID"] = dsTenderAD.Tables[0].Rows[0]["COUNTRYID"];
+            newrow["TOWNID"] = dsTenderAD.Tables[0].Rows[0]["TOWNID"];
+            newrow["TANDERDATE"] = dsTenderAD.Tables[0].Rows[0]["TANDERDATE"];
+            newrow["TEL"] = dsTenderAD.Tables[0].Rows[0]["TEL"];
+            newrow["EMAİL"] = dsTenderAD.Tables[0].Rows[0]["EMAİL"];
+            newrow["NOTE"] = dsTenderAD.Tables[0].Rows[0]["NOTE"];
+            newrow["STATUS"] = dsTenderAD.Tables[0].Rows[0]["STATUS"];
+            newrow["PAYSTATUS"] = "True";
+            AgentGc data = new AgentGc();
+            string veri = data.DataModified("TENDERD", newrow, dsTenderAD.Tables[0]);
+            return Redirect("/Home/Payment");
+            
+        }
         public ActionResult Confirmation(string BtnKbl, string BtnRed, System.Web.Mvc.FormCollection collection)
         {
             DataSet dsTenderD = new DataSet();

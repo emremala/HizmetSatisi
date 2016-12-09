@@ -1,0 +1,29 @@
+﻿
+@{
+    ViewBag.Title = "Payment";
+}
+
+
+<div class="panel panel-default">
+    <div class="panel-heading">Ödeme Ekranı</div>
+    <div class="panel-body">
+       
+         <form class="form-horizontal" method="post" action="/Home/Payment">
+            <div class="form-group">
+              
+                <input class="form-control col-xs-12" style=" float: left;"name="txtFULNM" required="" placeholder="Ad-Soyad" />
+                <input  class="form-control col-xs-12"style=" width: 50px; margin-left:10px; margin-right:10px; float: left;" name="txtMM" placeholder="MM" />
+                <input class="form-control col-xs-12" style=" width: 50px;" name="txtYY" placeholder="YY" />
+            </div>
+            <div class="form-group">
+                
+                <input class="form-control col-xs-12"style=" float: left; margin-right: 10px;" name="txtKN" placeholder="Kart Numarası" />
+                <input class="form-control col-xs-12" name="txtCVC"style=" margin-left: 10px; width: 110px;" placeholder="CVC" />
+            </div>
+           
+            <button class="btn btn-success col-sm-offset-4" style="float: left; margin-left: 290px;width: 110px;">Ödeme</button>
+        </form>
+        @*@Html.Partial("Counter")*@
+    </div>
+</div>
+

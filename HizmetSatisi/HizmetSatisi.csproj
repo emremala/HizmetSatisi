@@ -303,6 +303,7 @@
     <Content Include="Views\Home\Cust.cshtml" />
     <Content Include="Views\Home\Seller.cshtml" />
     <Content Include="Views\Home\TenderGift.cshtml" />
+    <Content Include="Views\Home\Payment.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />
