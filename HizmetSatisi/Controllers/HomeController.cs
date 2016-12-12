@@ -56,27 +56,27 @@ namespace HizmetSatisi.Controllers
             return Json(dsUserCNTR, JsonRequestBehavior.AllowGet);//id null değilse veritabanından çektiğimiz kayıtları döndürdük.
         }
 
-        public ActionResult TenderSave(string txtTANDERDATE, string txtTEL, string txtEMAİL, string txtNOTE, System.Web.Mvc.FormCollection collection)
+        public ActionResult TenderSave(string txtTANDERDATE,string btnTanderId, string txtTEL, string txtEMAİL, string txtNOTE, System.Web.Mvc.FormCollection collection)
         {
             DataSet dsTenderD = new DataSet();
             DataSet dsTenderUser = new DataSet();
             string COUNID = collection["USERCNTR"];
             string TOWNID = collection["USERTOWN"];
-            string TenderUserId = Session["TENDERID"].ToString();
+            string TenderId = Session["TENDERID"].ToString();
             using (DataVw dMan = new DataVw())
             {
                 dsTenderD = dMan.ExecuteView_S("TENDERD", "*", "", "", "");
             }
             using (DataVw dMan = new DataVw())
             {
-                dsTenderUser = dMan.ExecuteView_S("TENDER", "TENDERUSRID", TenderUserId,"", "ID=");
+                dsTenderUser = dMan.ExecuteView_S("TENDER", "TENDERUSRID", TenderId, "", "ID=");
 
             }
-            TenderUserId = dsTenderUser.Tables[0].Rows[0][0].ToString();
+            string TenderUsrId = dsTenderUser.Tables[0].Rows[0][0].ToString();
             DataRow newrow = dsTenderD.Tables[0].NewRow();
             newrow["ID"] = Guid.NewGuid();
             newrow["TENDERID"] = Session["TENDERID"].ToString();
-            newrow["TENDERUSERID"] = TenderUserId;
+            newrow["TENDERUSERID"] = TenderUsrId;
             newrow["TENDERDUSRID"] = Session["USRIDv"].ToString();
             newrow["COUNTRYID"] = COUNID;
             newrow["TOWNID"] = TOWNID;
@@ -98,6 +98,7 @@ namespace HizmetSatisi.Controllers
 
         public ActionResult TenderGift(System.Web.Mvc.FormCollection collection)
         {
+            
 
             if (Session["USRSTATUS"] != null)
             {
@@ -116,7 +117,7 @@ namespace HizmetSatisi.Controllers
                             dsUserCNTR.Add(new SelectListItem { Text = dr["COUNTRYNM"].ToString(), Value = dr["COUNTRYID"].ToString() });
                         }
                         ViewBag.USERCNTR = dsUserCNTR;
-                        string USRID = collection["btnTENDERID"];
+                        string USRID = collection["btnTanderId"];
                         Session["TENDERID"] = USRID;
                         DataSet dsUser = new DataSet();
 
@@ -203,6 +204,7 @@ namespace HizmetSatisi.Controllers
 
             ViewBag.CustInfo = CustInfo;
             DataSet dsTenderDs = new DataSet();
+            string USRDD = Session["USRIDv"].ToString();
             using (DataVw dMan = new DataVw())
             {
                 dsTenderDs = dMan.ExecuteView_S("TENDERADMIN", "*", Session["USRIDv"].ToString(), "", "TENDERDUSRID =");
@@ -260,6 +262,7 @@ namespace HizmetSatisi.Controllers
 
             ViewBag.TenderADApp = dsTenderDAp;
             DataSet dsTenderDsConf = new DataSet();
+            string asdad = Session["USRIDv"].ToString();
             using (DataVw dMan = new DataVw())
             {
                 dsTenderDsConf = dMan.ExecuteView_S("TENDERADMINCONF", "*", Session["USRIDv"].ToString(), "", "TENDERDUSRID =");
@@ -314,13 +317,40 @@ namespace HizmetSatisi.Controllers
         {
             return View();
         }
+        public ActionResult Update(string btnUpdate)
+        {
+            DataSet dsTenders = new DataSet();
+            using (DataVw dMan = new DataVw())
+            {
+                dsTenders = dMan.ExecuteView_S("TENDER", "*",btnUpdate, "", "ID=");
+            }
+            List<TenderList> TendersInfo = new List<TenderList>();
+            foreach (DataRow dr in dsTenders.Tables[0].Rows)
+            {
+                TendersInfo.Add(new TenderList
+                {
+                    ID = (Guid)dr["ID"],
+                    TENDERNAME = dr["TENDERNAME"].ToString(),
+                    TENDERNOTE = dr["TENDERNOTE"].ToString(),
+                    TENDERIMAGE = dr["TENDERIMAGE"].ToString(),
+                    TENDERUSRID = (Guid)dr["TENDERUSRID"]
+
+                });
+            }
+
+
+            ViewBag.TenderUpdate = TendersInfo;
+
+            return View();
+        }
 
         public ActionResult Seller()
         {
             DataSet dsTenderDs = new DataSet();
+            string USRID = Session["USRIDv"].ToString();
             using (DataVw dMan = new DataVw())
             {
-                dsTenderDs = dMan.ExecuteView_S("TENDERISHR", "*", Session["USRIDv"].ToString(), "", "TENDERUSERID=");
+                dsTenderDs = dMan.ExecuteView_S("TENDERISHR", "*", USRID, "", "TENDERUSERID=");
             }
             List<TenderDList> dsTenderD = new List<TenderDList>();
             foreach (DataRow dr in dsTenderDs.Tables[0].Rows)

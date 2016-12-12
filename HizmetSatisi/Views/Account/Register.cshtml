@@ -4,25 +4,7 @@
 <div class="panel panel-default">
     <div class="panel-heading">Giriş Yapın</div>
     <div class="panel-body">
-        @if (Convert.ToBoolean(Session["useraddsuccess"]) == true)
-        {
-            Session["useraddsuccess"] = false;
-            <div class="alert alert-info" role="alert">
-                <span class="glyphicon glyphicon-remove"></span>
-                <span class="sr-only">İnfo:</span>
-                Kayıt Edildi.
-            </div>
-        }
-        else
-        {
-            Session["useraddsuccess"] = false;
-            <div class="alert alert-danger" role="alert">
-                <span class="glyphicon glyphicon-remove"></span>
-                <span class="sr-only">Error:</span>
-                @*@ViewBag.addmessage*@
-                Eksik veri girişi! Tüm Alanları Doldurunuz.
-            </div>
-        };
+        
         <form enctype="multipart/form-data" class="form-horizontal" method="post" action="/Account/UserAdd">
             <div class="form-group">
                 <label for="fulname" class="col-sm-4 control-label">Adınız :</label>

@@ -100,6 +100,50 @@ namespace HizmetSatisi.Controllers
         }
         #endregion
         #region Manage Sayfası Bilgilerini Görüntüleme
+        public ActionResult UserUpdate(string btnUpdate,string txtFULNM,string txtUSRNM,string txtEMAIL, string txtPWD, HttpPostedFileBase file)
+        {
+            DataSet dsUSRUp = new DataSet();
+            using (DataVw dMan = new DataVw())
+            {
+                dsUSRUp = dMan.ExecuteView_S("USR", "*", "", "", "");
+            }
+            DataSet dsİmage = new DataSet();
+            using (DataVw dMan = new DataVw())
+            {
+                dsİmage = dMan.ExecuteView_S("USR", "AVATAR", btnUpdate, "", "ID=");
+            }
+
+            string filefo = "";
+            if (file != null)
+            {
+                string pic = System.IO.Path.GetFileName(file.FileName);
+                string path = System.IO.Path.Combine(Server.MapPath("~/images/tender"), pic);
+                string pathd = "~/images/tender/" + pic;
+                // file is uploaded
+                file.SaveAs(path);
+                filefo = pathd;
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    file.InputStream.CopyTo(ms);
+                    byte[] array = ms.GetBuffer();
+                }
+            }
+            else
+            {
+                filefo = dsİmage.Tables[0].Rows[0][0].ToString();
+            }
+            
+            DataRow newrow = dsUSRUp.Tables[0].Rows[0];
+            newrow["ID"] =btnUpdate;
+            newrow["USRNM"] = txtUSRNM;
+            newrow["PWD"] = CryptionHelper.Encrypt(txtPWD, "tb");
+            newrow["FULNM"] = txtFULNM;
+            newrow["EMAIL"] = txtEMAIL;
+            newrow["AVATAR"] =filefo;
+            AgentGc data = new AgentGc();
+            string veri = data.DataModified("USR", newrow, dsUSRUp.Tables[0]);
+            return View();
+        }
         public ActionResult Manage()
         {
             DataSet dsUser = new DataSet();
@@ -108,7 +152,8 @@ namespace HizmetSatisi.Controllers
             {
                 dsUser = dMan.ExecuteView_S("USR", "*", USRID, "", "ID = ");
             }
-
+            
+           
             List<UserList> userList = new List<UserList>();
             foreach (DataRow dr in dsUser.Tables[0].Rows)
             {
@@ -128,7 +173,31 @@ namespace HizmetSatisi.Controllers
             }
 
             ViewBag.UserList = userList;
+            DataSet dsManage = new DataSet();
+            string USRIDMNG = Session["USRIDv"].ToString();
+            using (DataVw dMan = new DataVw())
+            {
+                dsManage = dMan.ExecuteView_S("USR", "*", USRIDMNG, "", "ID = ");
+            }
 
+            List<UserList> userLManage = new List<UserList>();
+            foreach (DataRow dr in dsManage.Tables[0].Rows)
+            {
+
+
+                userLManage.Add(new UserList
+                {
+                    ID = (Guid)dr["ID"],
+                    USRNM = dr["USRNM"].ToString(),
+                    PWD = CryptionHelper.Decrypt(dr["PWD"].ToString(), "tb"),
+                    EMAIL = dr["EMAIL"].ToString(),
+                    FULNM = dr["FULNM"].ToString(),
+                    AVATAR=dr["AVATAR"].ToString(),
+
+                });
+            }
+
+            ViewBag.UserUpdate = userLManage;
             return View();
         }
         #endregion
@@ -139,74 +208,54 @@ namespace HizmetSatisi.Controllers
             return Redirect("/Account/SelectUserInfoChange");
         }
         [HttpPost]
-        public ActionResult SelectUserInfoChange(string txtUSRNM, string txtFULNM, string txtPWD, string txtEMAIL, string txtCARDNO, string txtCVC, string txtSTKDAY, string txtSTKMONTH, HttpPostedFileBase file, System.Web.Mvc.FormCollection collection)
+        public ActionResult SelectUserInfoChange(string txtUSRNM, string txtFULNM, string txtPWD, string txtEMAIL , HttpPostedFileBase file, System.Web.Mvc.FormCollection collection)
         {
             DataSet dsUser = new DataSet();
-            string USRID = collection.AllKeys[8].ToString();
+            string USRID = collection.AllKeys[4].ToString();
             string filefo = "";
             using (DataVw dMan = new DataVw())
             {
                 dsUser = dMan.ExecuteView_S("USR", "*", USRID, "", "ID = ");
             }
-
-            if (txtUSRNM.ToString() == "" || txtFULNM.ToString() == "" || txtPWD.ToString() == "" || txtEMAIL.ToString() == "" || txtCARDNO.ToString() == "" || txtCVC.ToString() == "" || txtSTKDAY.ToString() == "" || txtSTKMONTH.ToString() == "")
+            DataSet dsİmage = new DataSet();
+            using (DataVw dMan = new DataVw())
             {
-                return Content("<script language='javascript' type='text/javascript'>alert('Eksik veri girişi! Tüm Alanları Doldurunuz.');</script>");  ////Alert Mesajı Göndermek için.
-                //ViewBag.addmessage = "Eksik veri girişi! Tüm Alanları Doldurunuz.";
-                //return Redirect("/Account/Manage");
+                dsİmage = dMan.ExecuteView_S("USR", "AVATAR", USRID, "", "ID=");
             }
-            else
-            {
-                if (file != null)
+
+            if (file != null)
                 {
                     string pic = System.IO.Path.GetFileName(file.FileName);
-                    string path = System.IO.Path.Combine(Server.MapPath("~/images/avatar"), pic);
-                    string pathd = "~/images/avatar/" + pic;
+                    string path = System.IO.Path.Combine(Server.MapPath("~/images/tender"), pic);
+                    string pathd = "~/images/tender/" + pic;
                     // file is uploaded
                     file.SaveAs(path);
                     filefo = pathd;
-
                     using (MemoryStream ms = new MemoryStream())
                     {
                         file.InputStream.CopyTo(ms);
                         byte[] array = ms.GetBuffer();
                     }
-
                 }
+            else
+            {
+                filefo = dsİmage.Tables[0].Rows[0][0].ToString();
+            }
 
-                DataRow newrow = dsUser.Tables[0].Rows[0];
+            DataRow newrow = dsUser.Tables[0].Rows[0];
                 newrow["ID"] = USRID;
                 newrow["USRNM"] = txtUSRNM;
                 newrow["FULNM"] = txtFULNM;
                 newrow["EMAIL"] = txtEMAIL;
                 newrow["PWD"] = CryptionHelper.Encrypt(txtPWD, "tb");
-                newrow["IS_ADMIN"] = 1;
-                newrow["IS_SYSADM"] = 0;
-                newrow["IS_HR"] = 0;
-                newrow["CHNG_PWD"] = 0;
-                if (filefo == "")
-                {
-                    newrow["AVATAR"] = "~/images/avatar/nullavatar.jpg";
-                }
-                else
-                {
-                    newrow["AVATAR"] = filefo;
-                }
-                newrow["CARDNO"] = txtCARDNO;
-                newrow["CVC"] = txtCVC;
-                newrow["STKDAY"] = txtSTKDAY;
-                newrow["STKMONTH"] = txtSTKMONTH;
-                //newrow["EDATE"] = DateTime.Now;
-                //newrow["EUSRID"] = null;
-                newrow["UDATE"] = DateTime.Now;
-                //newrow["UUSRID"] = null;
-                newrow["NOTE"] = "En Son Güncelleme İşlemi Gerçekleştirdi.";
+                newrow["AVATAR"] = filefo;
+                Session["avatarimg"] = filefo;
                 AgentGc data = new AgentGc();
                 string veri = data.DataModified("USR", newrow, dsUser.Tables[0]);
-                return Content("<script language='javascript' type='text/javascript'>alert('" + veri + "');</script>");
+               
                 //ViewBag.addmessageinfo = veri;
                 //return Redirect("/Account/Manage");
-            }
+            
             return Redirect("/Account/Manage");
         }
         #endregion
@@ -348,6 +397,7 @@ namespace HizmetSatisi.Controllers
                     }
                     else
 	                {
+
                         Session["SELLER"] = true;
                         Session["IsAuthenticated"] = true;
                         Session["loginRoles"] = false;
@@ -506,6 +556,49 @@ namespace HizmetSatisi.Controllers
             string veri = data.DataModified("TENDERD", newrow, dsTenderAD.Tables[0]);
             return Redirect("/Home/Payment");
             
+        }
+        public ActionResult TenderUpdate(string btnUpdate, string txtTENDERNAME, string txtTENDERNOTE, HttpPostedFileBase file, System.Web.Mvc.FormCollection collection)
+        {
+            DataSet dsTenderUp = new DataSet();
+            using (DataVw dMan = new DataVw())
+            {
+                dsTenderUp = dMan.ExecuteView_S("TENDER", "*", "", "", "");
+            }
+            DataSet dsİmage = new DataSet();
+            using (DataVw dMan = new DataVw())
+            {
+                dsİmage = dMan.ExecuteView_S("TENDER", "TENDERIMAGE", btnUpdate, "", "ID=");
+            }
+
+            string filefo = ""; 
+            if (file!=null)
+            {
+                string pic = System.IO.Path.GetFileName(file.FileName);
+                string path = System.IO.Path.Combine(Server.MapPath("~/images/tender"), pic);
+                string pathd = "~/images/tender/" + pic;
+                // file is uploaded
+                file.SaveAs(path);
+                filefo = pathd;
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    file.InputStream.CopyTo(ms);
+                    byte[] array = ms.GetBuffer();
+                }
+            }
+            else
+            {
+                filefo = dsİmage.Tables[0].Rows[0][0].ToString();
+            }
+            
+            DataRow newrow = dsTenderUp.Tables[0].Rows[0];
+            newrow["ID"] =btnUpdate;
+            newrow["TENDERNAME"] =txtTENDERNAME;
+            newrow["TENDERNOTE"] =txtTENDERNOTE;
+            newrow["TENDERIMAGE"] = filefo;
+            newrow["TENDERUSRID"] = Session["USRIDv"].ToString();
+            AgentGc data = new AgentGc();
+            string veri = data.DataModified("TENDER", newrow, dsTenderUp.Tables[0]);
+            return Redirect("/Home/Seller");  
         }
         public ActionResult Confirmation(string BtnKbl, string BtnRed, System.Web.Mvc.FormCollection collection)
         {

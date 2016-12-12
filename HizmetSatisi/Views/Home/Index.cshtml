@@ -1,41 +1,59 @@
 ﻿@{
-    ViewBag.Title = "Home Page";
+    ViewBag.Title = "Anasayfa";
 }
-<link href="~/css/2016style.css" rel="stylesheet" />
-<script src="~/js/validator.min.js"></script>
 
+<section class="jumbotron text-xs-center">
+    <div class="container">
+        <h1 class="jumbotron-heading">HİZMET PİŞ, AĞZIMA DÜŞ</h1>
+        <p class="lead text-muted">ÜCRETSİZ TEKLİF AL, KARŞILAŞTIR. 90.000 PROFESYONEL SENİ BEKLİYOR.</p>
+        <p>
+                @if (Convert.ToBoolean(Session["IS_HR"]))
+                {
+                    <button class="btn btn-primary"><a>@Html.ActionLink("Bilgileri Güncelle", "Manage", "Account", new { area = "" }, new { @style = "color: #fff; text-decoration: none;" }) </a></button>
+                    <button class="btn btn-secondary"><a>@Html.ActionLink("Yönetim Paneli", "Seller", "Home", new { area = "" }, new { @style = "text-decoration: none;" })</a> </button>
+                }
+                else if (Convert.ToBoolean(Session["IS_ADMIN"]))
+                {
+                    <button class="btn btn-primary"><a>@Html.ActionLink("Bilgileri Güncelle", "Manage", "Account", new { area = "" }, new { @style = "color: #fff; text-decoration: none;" }) </a></button>
+                    <button class="btn btn-secondary"><a>@Html.ActionLink("Yönetim Paneli", "Cust", "Home", new { area = "" }, new { @style = "text-decoration: none;" })</a> </button>
+                }
+                else if (Convert.ToBoolean(Session["IS_SYSADM"]))
+                {
+                    <button class="btn btn-primary"><a>@Html.ActionLink("Bilgileri Güncelle", "Manage", "Account", new { area = "" }, new { @style = "color: #fff; text-decoration: none;" }) </a></button>
+                    <button class="btn btn-secondary"><a>@Html.ActionLink("Giriş Yap", "Login", "Account", new { area = "" }, new { @style = "text-decoration: none;" })</a> </button>
+                }
+                else
+                {
+                    <button class="btn btn-primary"><a>@Html.ActionLink("Kayıt Ol", "Register", "Account", new { area = "" }, new { @style = "color: #fff; text-decoration: none;" }) </a></button>
+                    <button class="btn btn-secondary"><a>@Html.ActionLink("Giriş Yap", "Login", "Account", new { area = "" }, new { @style = "text-decoration: none;" })</a> </button>
+                }
+
+
+</p>
+    </div>
+</section>
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
                 <div class="popular">
                     <h2 class="popular-services">Tüm Teklifler</h2>
                     @foreach (var tenders in ViewBag.Tenders)
-                    {
-                    <div id="ContentPlaceHolder1_rpPopularServicePods_ucServicePods_0_pnlServicePods_0"style="border: 1px solid; padding:0px; margin-bottom:50px;  " class="col-xs-12 col-md-3" >
+            {
 
-                        <a href="#"></a>
-                        <div class="service-pod-wrapper">
-                            <a href="#">
-                                <div class="img-box">
-                                    <div class="img-inner-shadow"></div>
-                                    <div class="dark-overlay"></div>
-                                    <img id="service-pod-wrapper"style="width:100%;height:150px;" src="@Url.Content(@tenders.TENDERIMAGE)" alt="avatar" />
-                                    
+                        <form class="form-horizontal" method="post" action="/Home/TenderGift">
+                            <div class="col-sm-6 col-md-4" style="margin-bottom: 10px;">
+                                <div class="thumbnail">
+                                    <img src="@Url.Content(@tenders.TENDERIMAGE)" style=" width: 300px; height: 200px;" alt="Teklif" />
+                                    <div class="caption">
+                                        <h3>@tenders.TENDERNAME</h3>
+                                        <p>@tenders.TENDERNOTE</p>
+                                        
+                                        <p><button id="@tenders.ID" class="btn btn-success col-sm-offset-4" name="btnTanderId" value="@tenders.ID"><i class="fa fa-credit-card"></i> Teklif Ver</button></p>
+                                        @*<p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p>*@
+                                    </div>
                                 </div>
-                            </a>
-                            <form class="form-horizontal" method="post" action="/Home/TenderGift">
-                                <div class="description-box" style="padding:5px;">
-                                    <a href="#">
-                                        <h4 style="margin-top: -10px;    margin-bottom: -20px;"><span style="margin: 0px; margin-left: 5px;" id="ContentPlaceHolder1_rpPopularServicePods_ucServicePods_0_lblServiceNameShort_0">@tenders.TENDERNAME</span></h4>
-                                        <hr />
-
-                                    </a><button  id="@tenders.ID" value="@tenders.ID" name="btnTENDERID"  style="width: 100%;/* float:none; *//* margin-left:auto; *//* margin-right:auto; */text-align:center;/* margin-bottom:5px; */margin-top:5px;height: 50px;line-height: 40px;margin-top: -10px;" class="btn action-btn btn-orange">Teklif Al</button>
-                            
                             </div>
-                            </form>
-                        </div>
-
-                    </div>
+                        </form>
                     }
                 </div>
             </div>
@@ -45,25 +63,3 @@
    
 
 
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-    </div>
-   
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-    </div>
-</div>
