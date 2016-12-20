@@ -337,85 +337,89 @@ namespace HizmetSatisi.Controllers
 
             if (dsUser.Tables[0].Rows.Count > 0)
             {
-                DataRow row = dsUser.Tables[0].Rows[0];
 
-                UserData = new User();
-                UserData.USRID = (Guid)row["ID"];
-
-                UserData.USRNM = Convert.ToString(row["USRNM"]);
-                UserData.FULNM = Convert.ToString(row["FULNM"]);
-                UserData.AVATAR = Convert.ToString(row["AVATAR"]);
-                UserData.Email = Convert.ToString(row["EMAIL"]);
-                UserData.IS_ADMIN = Convert.ToBoolean(row["IS_ADMIN"]);
-                UserData.IS_SYSADM = Convert.ToBoolean(row["IS_SYSADM"]);
-                UserData.IS_HR = Convert.ToBoolean(row["IS_HR"]);
-
-                if (txtUsername.ToString() == row["USRNM"].ToString() && txtPassword.ToString() == CryptionHelper.Decrypt(row["PWD"].ToString(), "tb").ToString())
+                if (dsUser.Tables[0].Rows[0]["IS_AC"].ToString()=="True")
                 {
-                    Session["USRSTATUS"] = row["IS_ADMIN"].ToString();
-                    Session["USRSTATUSADM"] = row["IS_SYSADM"].ToString();
-                    Session["USRIDv"] = row["ID"].ToString();
-                    Session["name"] = row["FULNM"].ToString();
-                    //Session["admin"] = true;
-                    //Session["loginError"] = true;
-                    Session["IsAuthenticated"] = true;
-                    Session["ADMIN"] = row["IS_SYSADM"].ToString();
+                    DataRow row = dsUser.Tables[0].Rows[0];
 
-                    if (row["IS_SYSADM"].ToString() == "True")
+                    UserData = new User();
+                    UserData.USRID = (Guid)row["ID"];
+
+                    UserData.USRNM = Convert.ToString(row["USRNM"]);
+                    UserData.FULNM = Convert.ToString(row["FULNM"]);
+                    UserData.AVATAR = Convert.ToString(row["AVATAR"]);
+                    UserData.Email = Convert.ToString(row["EMAIL"]);
+                    UserData.IS_ADMIN = Convert.ToBoolean(row["IS_ADMIN"]);
+                    UserData.IS_SYSADM = Convert.ToBoolean(row["IS_SYSADM"]);
+                    UserData.IS_HR = Convert.ToBoolean(row["IS_HR"]);
+
+                    if (txtUsername.ToString() == row["USRNM"].ToString() && txtPassword.ToString() == CryptionHelper.Decrypt(row["PWD"].ToString(), "tb").ToString())
                     {
-                        Session["IS_SYSADM"] = true;
-                        //Session["loginRoles"] = true;
+                        Session["USRSTATUS"] = row["IS_ADMIN"].ToString();
+                        Session["USRSTATUSADM"] = row["IS_SYSADM"].ToString();
+                        Session["USRIDv"] = row["ID"].ToString();
+                        Session["name"] = row["FULNM"].ToString();
                         //Session["admin"] = true;
-                        if (row["AVATAR"].ToString() == "")
-                        {
-                            Session["avatarimg"] = "~/images/profil/nullavatar.jpg";
-                        }
-                        else
-                        {
-                            Session["avatarimg"] = row["AVATAR"].ToString();
-                        }
-                        
-                        
-                        return Redirect("/Home/Admin");
-                    }
-                    else if(row["IS_ADMIN"].ToString() == "True")
-                    {
+                        //Session["loginError"] = true;
                         Session["IsAuthenticated"] = true;
-                        Session["loginRoles"] = false;
-                        Session["CUST"] = true;
-                        Session["IS_ADMIN"] = true;
-                        if (row["AVATAR"].ToString() == "")
+                        Session["ADMIN"] = row["IS_SYSADM"].ToString();
+
+                        if (row["IS_SYSADM"].ToString() == "True")
                         {
-                            Session["avatarimg"] = "~/images/profil/nullavatar.jpg";
+                            Session["IS_SYSADM"] = true;
+                            //Session["loginRoles"] = true;
+                            //Session["admin"] = true;
+                            if (row["AVATAR"].ToString() == "")
+                            {
+                                Session["avatarimg"] = "~/images/profil/nullavatar.jpg";
+                            }
+                            else
+                            {
+                                Session["avatarimg"] = row["AVATAR"].ToString();
+                            }
+
+
+                            return Redirect("/Default/Admin");
+                        }
+                        else if (row["IS_ADMIN"].ToString() == "True")
+                        {
+                            Session["IsAuthenticated"] = true;
+                            Session["loginRoles"] = false;
+                            Session["CUST"] = true;
+                            Session["IS_ADMIN"] = true;
+                            if (row["AVATAR"].ToString() == "")
+                            {
+                                Session["avatarimg"] = "~/images/profil/nullavatar.jpg";
+                            }
+                            else
+                            {
+                                Session["avatarimg"] = row["AVATAR"].ToString();
+                            }
+
+                            return Redirect("/Home/Cust");
                         }
                         else
                         {
-                            Session["avatarimg"] = row["AVATAR"].ToString();
-                        }
-                       
-                        return Redirect("/Home/Cust");
-                    }
-                    else
-	                {
 
-                        Session["SELLER"] = true;
-                        Session["IsAuthenticated"] = true;
-                        Session["loginRoles"] = false;
-                        //Session["admin"] = false;
-                        Session["IS_HR"] = true;
-                        if (row["AVATAR"].ToString() == "")
-                        {
-                            Session["avatarimg"] = "~/images/profil/nullavatar.jpg";
-                        }
-                        else
-                        {
-                            Session["avatarimg"] = row["AVATAR"].ToString();
+                            Session["SELLER"] = true;
+                            Session["IsAuthenticated"] = true;
+                            Session["loginRoles"] = false;
+                            //Session["admin"] = false;
+                            Session["IS_HR"] = true;
+                            if (row["AVATAR"].ToString() == "")
+                            {
+                                Session["avatarimg"] = "~/images/profil/nullavatar.jpg";
+                            }
+                            else
+                            {
+                                Session["avatarimg"] = row["AVATAR"].ToString();
+                            }
+
+
                         }
 
-                        
+                        return Redirect("/Home/Seller"); 
                     }
-                   
-                    return Redirect("/Home/Seller");
                 }
 
                 Session["loginError"] = true;
@@ -504,6 +508,7 @@ namespace HizmetSatisi.Controllers
                     {
                         newrow["AVATAR"] = filefo;
                     }
+                    newrow["IS_AC"] = "True";
                     newrow["AVATAR"] = filefo;
                     newrow["EDATE"] = DateTime.Now;
                     //newrow["EUSRID"] = null;
@@ -598,7 +603,15 @@ namespace HizmetSatisi.Controllers
             newrow["TENDERUSRID"] = Session["USRIDv"].ToString();
             AgentGc data = new AgentGc();
             string veri = data.DataModified("TENDER", newrow, dsTenderUp.Tables[0]);
-            return Redirect("/Home/Seller");  
+            if (Session["IS_SYSADM"].ToString()=="True")
+            {
+                return Redirect("/Default/Admin");
+            }
+            else
+            {
+                return Redirect("/Home/Seller");
+            }
+            
         }
         public ActionResult Confirmation(string BtnKbl, string BtnRed, System.Web.Mvc.FormCollection collection)
         {

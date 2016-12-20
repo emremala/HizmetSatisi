@@ -239,6 +239,7 @@
     <Content Include="images\bg.jpg" />
     <Content Include="images\iconlogout.png" />
     <Content Include="images\images.jpg" />
+    <Content Include="images\logo.png" />
     <Content Include="images\profil\nullavatar.jpg" />
     <Content Include="images\tender\20161119_195218.jpg" />
     <Content Include="images\tender\avatar1.JPG" />
@@ -297,7 +298,6 @@
     <Content Include="Service References\Application Insights\ConnectedService.json" />
     <Content Include="Views\Default\Admin.cshtml" />
     <Content Include="Views\Account\Manage.cshtml" />
-    <Content Include="Views\Home\Admin.cshtml" />
     <Content Include="Views\Home\Cust.cshtml" />
     <Content Include="Views\Home\Seller.cshtml" />
     <Content Include="Views\Home\TenderGift.cshtml" />

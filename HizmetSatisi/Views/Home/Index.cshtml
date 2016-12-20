@@ -1,11 +1,95 @@
 ﻿@{
     ViewBag.Title = "Anasayfa";
 }
+<script>
 
+            $('#myModal').modal('show');
+
+</script>
+
+<style>
+    .nav-tabs {
+        margin-bottom: 300px;
+    }
+
+    .sign-with {
+        margin-top: 25px;
+        padding: 20px;
+    }
+
+    div#OR {
+        height: 30px;
+        width: 30px;
+        border: 1px solid #C2C2C2;
+        border-radius: 50%;
+        font-weight: bold;
+        line-height: 28px;
+        text-align: center;
+        font-size: 12px;
+        float: right;
+        position: absolute;
+        right: -16px;
+        top: 40%;
+        z-index: 1;
+        background: #DFDFDF;
+    }
+
+    .wrapper {
+        margin-top: 80px;
+        margin-bottom: 20px;
+    }
+
+    .form-signin {
+        max-width: 420px;
+        padding: 30px 38px 66px;
+        margin: 0 auto;
+        background-color: #eee;
+        border: 3px dotted rgba(0,0,0,0.1);
+    }
+
+    .form-signin-heading {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .form-control {
+        position: relative;
+        font-size: 16px;
+        height: auto;
+        padding: 10px;
+    }
+
+    input[type="text"] {
+        margin-bottom: 0px;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+
+    input[type="password"] {
+        margin-bottom: 20px;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+    }
+
+    .colorgraph {
+        height: 7px;
+        border-top: 0;
+        background: #c4e17f;
+        border-radius: 5px;
+        background-image: -webkit-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+        background-image: -moz-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+        background-image: -o-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+        background-image: linear-gradient(to right, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+    }
+</style>
 <section class="jumbotron text-xs-center">
     <div class="container">
-        <h1 class="jumbotron-heading">HİZMET PİŞ, AĞZIMA DÜŞ</h1>
-        <p class="lead text-muted">ÜCRETSİZ TEKLİF AL, KARŞILAŞTIR. 90.000 PROFESYONEL SENİ BEKLİYOR.</p>
+        <h2 style="float:left;" class="jumbotron-heading">HİZMET YAĞMURUNDA </h2><h2 style="color:red;float:left;">&nbsp;ŞEMSİYESİZ&nbsp;</h2><h2> KALMAYIN</h2>
+        
+        <img src="~/images/logo.png" style="float: right;width: 12%;margin-top: -48px;margin-right: 47px;" />
+       
+            
+        <p class="lead text-muted">ÜCRETSİZ TEKLİF AL. 90.000 PROFESYONEL SENİ BEKLİYOR.</p>
         <p>
                 @if (Convert.ToBoolean(Session["IS_HR"]))
                 {
@@ -20,16 +104,38 @@
                 else if (Convert.ToBoolean(Session["IS_SYSADM"]))
                 {
                     <button class="btn btn-primary"><a>@Html.ActionLink("Bilgileri Güncelle", "Manage", "Account", new { area = "" }, new { @style = "color: #fff; text-decoration: none;" }) </a></button>
-                    <button class="btn btn-secondary"><a>@Html.ActionLink("Giriş Yap", "Login", "Account", new { area = "" }, new { @style = "text-decoration: none;" })</a> </button>
+                    <button class="btn btn-secondary"data-toggle="modal" data-target="#myModal"><a>@Html.ActionLink("Giriş Yap", "Login", "Account", new { area = "" }, new { @style = "text-decoration: none;" })</a> </button>
                 }
                 else
                 {
                     <button class="btn btn-primary"><a>@Html.ActionLink("Kayıt Ol", "Register", "Account", new { area = "" }, new { @style = "color: #fff; text-decoration: none;" }) </a></button>
-                    <button class="btn btn-secondary"><a>@Html.ActionLink("Giriş Yap", "Login", "Account", new { area = "" }, new { @style = "text-decoration: none;" })</a> </button>
+                    <button  class="btn btn-secondary"data-toggle="modal" data-target="#myModal"><a>@Html.ActionLink("Giriş Yap", "Login", "Account", new { area = "" }, new { @style = "text-decoration: none;" })</a> </button>
                 }
 
 
+ 
 </p>
+        <div class="modal fade" id="myModal" style="padding-top: 100px;" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+             aria-hidden="true">
+            
+                <div class="modal-content" style="width: 425px;  margin: 0px auto;">
+                   
+                      
+                            <form action="/Account/Control" method="post" name="Login_Form" class="form-signin">
+                                <center><img src="~/images/logo.png" style="width :30%;" /></center>
+                                <hr class="colorgraph"><br>
+
+                                <input  required="" type="text" class="form-control" re style="margin: 0px auto;margin-bottom: 5px;" name="txtUsername" placeholder="Username" required="" autofocus="" />
+                                <input  required="" type="password" class="form-control" style="margin: 0px auto;margin-bottom: 30px;" name="txtPassword" placeholder="Password" required="" />
+
+                                <button class="btn btn-lg btn-primary btn-block" name="Submit" value="Login" type="Submit">Login</button>
+                            </form>
+                       
+                  
+            
+        </div>
+
+
     </div>
 </section>
     <div class="container">

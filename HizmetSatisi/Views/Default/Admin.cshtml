@@ -1,7 +1,219 @@
-﻿
-@{
-    ViewBag.Title = "Admin";
+﻿@{
+    ViewBag.Title = "Admin Paneli";
 }
 
-<h2>Admin</h2>
+@if (Convert.ToBoolean(Session["ADMIN"]))
+{
+    <div class="row">
+    <div class="col-lg-6 col-lg-offset-3" style="margin-left:0px; width:100%;">
+        <div class="row">
+            <div class="col-xs-6 col-md-3">
+                <a href="#" class="thumbnail" style="width:65%;">
+                    <img src="@Url.Content(Session["avatarimg"].ToString())" alt="avatar" />
+                </a>
+            </div>
+        </div>
+        <br />
+        <br />
+       
+        <div id="exTab1" class="container">
+            <ul class="nav nav-pills">
+                <li class="active">
+                    <a href="#1a" data-toggle="tab">User Locking</a>
+                </li>
+                <li>
+                    <a href="#2a" data-toggle="tab">User Unlocking</a>
+                </li>
+                <li>
+                    <a href="#3a" data-toggle="tab">Teklif İşlemleri</a>
+                </li>
+                <li>
+                    <a href="#4a" data-toggle="tab">Teklif Raporları</a>
+                </li>
+            </ul>
+
+            <div class="tab-content clearfix">
+                <div class="tab-pane active" id="1a">
+                    <table class="table table-bordered">
+                        <thead class="thead-inverse">
+                            <tr>
+                                <th>#</th>
+                                <th>Kullanıcı Adı</th>
+                                <th>Parola</th>
+                                <th>Adı</th>
+                                <th>Email</th>
+                                <th>Üyelik Durumu</th>
+                                <th>Resim</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var user in ViewBag.AdminUser)
+                            {
+                                <tr>
+                                    <form class="form-horizontal" method="post" action="/Default/Bloke">
+
+                                        <th style="text-align: center; line-height: 50px;" scope="row">1</th>
+                                        <td style="text-align: center; line-height: 50px;">@user.USRNM</td>
+                                        <td style="text-align: center; line-height: 50px;">@user.PWD</td>
+                                        <td style="text-align: center; line-height: 50px;">@user.FULNM</td>
+                                        <td style="text-align: center; line-height: 50px;">@user.EMAIL</td>
+                                        <td style="text-align: center; line-height: 50px;">@user.STATUS</td>
+                                        <td style="text-align: center; line-height: 50px;"><img style="width:100px;height:100px;" src="@Url.Content(@user.AVATAR)" alt="avatar" /></td>
+                                        <td style="text-align: center; line-height: 50px;"> <button style=" margin-top: 20px; margin-left: 0px;line-height: 50px;" id="@user.ID" value="@user.ID" name="btnBloke" class="btn btn-success col-sm-offset-4">Bloke Et</button></td>
+
+                                    </form>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                </div>
+                <div class="tab-pane" id="2a">
+                    <table class="table table-bordered">
+                        <thead class="thead-inverse">
+                            <tr>
+                                <th>#</th>
+                                <th>Kullanıcı Adı</th>
+                                <th>Parola</th>
+                                <th>Adı</th>
+                                <th>Email</th>
+                                <th>Üyelik Durumu</th>
+                                <th>Resim</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var user in ViewBag.AdminUserOpen)
+                            {
+                                <tr>
+                                    <form class="form-horizontal" method="post" action="/Default/OpenBloke">
+
+                                        <th style="text-align: center; line-height: 50px;" scope="row">1</th>
+                                        <td style="text-align: center; line-height: 50px;">@user.USRNM</td>
+                                        <td style="text-align: center; line-height: 50px;">@user.PWD</td>
+                                        <td style="text-align: center; line-height: 50px;">@user.FULNM</td>
+                                        <td style="text-align: center; line-height: 50px;">@user.EMAIL</td>
+                                        <td style="text-align: center; line-height: 50px;">@user.STATUS</td>
+                                        <td style="text-align: center; line-height: 50px;"><img style="width:100px;height:100px;" src="@Url.Content(@user.AVATAR)" alt="avatar" /></td>
+                                        <td style="text-align: center; line-height: 50px;"> <button style=" margin-top 20px; margin-left 0px;line-height 50px;" id="@user.ID" value="@user.ID" name="btnBloke" class="btn btn-success col-sm-offset-4">Bloke Kaldır</button></td>
+
+                                    </form>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="tab-pane" id="3a">
+                    <br />
+                    <table class="table table-bordered">
+                        <thead class="thead-inverse">
+                            <tr>
+                                <th>#</th>
+                                <th>Teklif Adı</th>
+                                <th>Teklif Açıklama</th>
+                                <th>Resim</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @try
+                            {
+                                foreach (var tender in ViewBag.AdminTender)
+                                {
+                                    <tr>
+
+                                        <form enctype="multipart/form-data" class="form-horizontal" method="post" action="/Home/Update">
+                                            <th style="text-align: center; line-height: 50px;" scope="row">1</th>
+                                            <td style="text-align: center; line-height: 50px;">@tender.TENDERNAME</td>
+                                            <td style="text-align: center; line-height: 50px;">@tender.TENDERNOTE</td>
+                                            <td style="text-align: center; line-height: 50px;"><img style="width:100px;height:100px;" src="@Url.Content(@tender.TENDERIMAGE)" alt="avatar" /></td>
+                                            <td style="text-align: center; line-height: 50px;"> <button id="@tender.ID" value="@tender.ID" name="btnUpdate" class="btn btn-success col-sm-offset-4">Güncelle</button></td>
+
+
+                                        </form>
+                                    </tr>
+
+                                }
+                            }
+                            catch (Exception)
+                            {
+
+                                throw;
+                            }
+
+                        </tbody>
+                    </table>
+
+                </div>
+                <div class="tab-pane" id="4a">
+                    <br />
+                    <table class="table table-bordered">
+                        <thead class="thead-inverse">
+                            <tr>
+                                <th>#</th>
+                                <th>Teklif Adı</th>
+                                <th>Müşteri Adı</th>
+                                <th>İl</th>
+                                <th>İlçe</th>
+                                <th>Veriliş Tarihi</th>
+                                <th>Telefon</th>
+                                <th>E-mail</th>
+                                <th>Açıklama</th>
+                                <th>Durum</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var tenderAppd in ViewBag.TenderRapor)
+                            {
+                                <tr>
+
+
+                                    <th style="text-align: center; line-height: 50px;" scope="row">1</th>
+                                    <td style="text-align: center; line-height: 50px;">@tenderAppd.TENDERNAME</td>
+                                    <td style="text-align: center; line-height: 50px;">@tenderAppd.FULNM</td>
+                                    <td style="text-align: center; line-height: 50px;">@tenderAppd.COUNTRYNM</td>
+                                    <td style="text-align: center; line-height: 50px;">@tenderAppd.TOWNNM</td>
+                                    <td style="text-align: center; line-height: 50px;">@tenderAppd.TANDERDATE</td>
+                                    <td style="text-align: center; line-height: 50px;">@tenderAppd.TEL</td>
+                                    <td style="text-align: center; line-height: 50px;">@tenderAppd.EMAIL</td>
+                                    <td style="text-align: center; line-height: 50px;">@tenderAppd.NOTE</td>
+                                    <td style="text-align: center; line-height: 50px;">@tenderAppd.STATUS </td>
+
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+
+        @*<div class="row margin">
+            <div class="col-sm-4">
+                <a class="btn btn-block btn-default" href="@Url.Action("Index","Comments")">
+                    <i class="fa fa-commenting fa-3x"></i><br> <small>Yorumlar</small>
+                </a>
+            </div>
+            <div class="col-sm-4">
+                <a class="btn btn-block btn-default" href="@Url.Action("Index","Logs")">
+                    <i class="fa fa-area-chart fa-3x"></i><br> <small>İşlem Kayıtları</small>
+                </a>
+            </div>
+            <div class="col-sm-4">
+                <a class="btn btn-block btn-default" href="@Url.Action("Index", "ProjectAccesses")">
+                    <i class="fa fa-exchange fa-3x"></i><br> <small>Proje Erişimleri</small>
+                </a>
+            </div>
+        </div>*@
+    </div>
+</div>
+}
+else { 
+            <div class="alert alert-danger" role="alert">
+                <span class="glyphicon glyphicon-remove"></span>
+                <span class="sr-only">Error:</span>
+                Yetkiniz Yok.
+            </div>
+}
+
+
 
